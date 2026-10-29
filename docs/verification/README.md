@@ -32,3 +32,7 @@ New password-*.log and postgres-*.log evidence is separate from historical token
 ## Release workflow and unified Compose
 
 release-package-tests.log records packaging/secret-exclusion/digest/checksum tests. release-compose-validation.log records real Docker Compose CLI validation of release and source files across SQLite-only, SQLite+Caddy, PostgreSQL+Caddy and PostgreSQL+Caddy+Redis. release-actionlint.log is empty on successful actionlint validation. release-rust-*.log and release-ui-build.log record regression checks. These do not claim Docker Engine execution, registry publication or a GitHub Actions run; the full-stack image smoke is implemented for the hosted runner.
+
+## Verified v0.1.0 container publication
+
+The hosted recovery workflow https://github.com/Dizzd/link-proxy/actions/runs/40891455791 completed successfully, including the actual Docker image build and full PostgreSQL/proxy/Caddy/Redis smoke test, registry push and release upload. This supersedes the earlier local-only Docker limitation for v0.1.0. release-v0.1.0-verification.log records a fresh authenticated archive download, eight checksum comparisons and agreement between the bundle's pinned image and the pushed manifest digest. Other deployment environments and architectures are not covered by this run.

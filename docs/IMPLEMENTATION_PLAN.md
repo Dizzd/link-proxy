@@ -116,3 +116,9 @@ Architecture: reuse the Rust/frontend CI workflows as release gates; build linux
 - The first actual Docker build found a runtime account collision: Debian already contains the system user proxy. Corrected the Dockerfile to create a separate urlproxy account with UID 10001 and a nologin shell.
 - Added workflow_dispatch recovery restricted to the exact release tag, keeping reusable validation and image source at the same Git commit. Existing releases must exist before publishing assets.
 - Image build/smoke/push/assets remain pending until a successful recovery run. No image or deployment assets were uploaded by the failed run.
+
+### v0.1.0 publication completed
+
+Recovery run https://github.com/Dizzd/link-proxy/actions/runs/40891455791 succeeded from release commit 21197a0697bc880eebb8f1ffc06946a522dda9fe. It built the image and passed the actual container smoke test covering the React UI, password session, PostgreSQL, Redis, publication and Caddy -> Pingora redirect, then pushed GHCR and uploaded nine release assets. All Compose combinations passed again on the hosted runner.
+
+Published image: ghcr.io/dizzd/link-proxy:v0.1.0, pinned manifest sha256:a319e587c99eeca6b8fa452e35e905fe1d566608c8c74b4ee77a5422d68c258d. Downloaded the real release archive and SHA256SUMS using authenticated GitHub access: all eight checksums and seven archive members matched, and release.json/.env.example referenced the pushed digest. Evidence: docs/verification/release-v0.1.0-verification.log. GitHub names the standalone environment asset default.env.example; the archive preserves .env.example. The completed release remains a pre-release, not Latest. The tag remains at the verified image source commit; subsequent documentation-only commits do not retarget published artifacts.

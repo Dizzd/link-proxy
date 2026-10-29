@@ -6,6 +6,8 @@ Dynamic URL mapping and conditional routing with a Pingora data plane, Axum mana
 
 An early release for evaluation and controlled deployments. The application image currently supports **linux/amd64**. Deployment assets are attached to the [v0.1.0 pre-release](https://github.com/Dizzd/link-proxy/releases/tag/v0.1.0) only after its [Container release workflow](https://github.com/Dizzd/link-proxy/actions/workflows/release.yml) succeeds. A published release page alone does not mean the image/bundle is ready.
 
+**Verified build:** [v0.1.0 release workflow](https://github.com/Dizzd/link-proxy/actions/runs/40891455791) passed image build, full-stack smoke test, GHCR push and asset upload. The downloaded deployment bundle was checked against all eight SHA256SUMS entries.
+
 The release contains dynamic-url-proxy-deploy.tar.gz, a single docker-compose.yml, .env.example, Caddyfile, memory/Redis TOML configurations, release metadata and SHA256SUMS. The bundle pins the exact GHCR image digest; no source build, Rust or Node is required on the deployment server.
 
 ## Capabilities
@@ -28,6 +30,8 @@ Normal routing requests read only the immutable in-memory snapshot; they never q
 The Container release GitHub Action runs when a GitHub Release is published. It gates on Rust, frontend and deployment checks, builds the linux/amd64 image, smoke-tests PostgreSQL + proxy + Caddy + Redis, pushes the tested image to ghcr.io/dizzd/link-proxy:RELEASE_TAG and uploads an immutable-digest deployment bundle to that release. Release credentials use GITHUB_TOKEN; administrator/database passwords are set only on your server.
 
 Download the runtime bundle and SHA256SUMS from [v0.1.0 Assets](https://github.com/Dizzd/link-proxy/releases/tag/v0.1.0) after the Container release workflow succeeds. This repository is private: use an authenticated browser or GitHub CLI to download the files. You can download on your workstation and upload the archive/checksums to the server; the server itself needs only Docker Engine and Docker Compose >= 2.20.0.
+
+Use the archive to preserve all file names and relative mounts. GitHub lists the standalone environment asset as default.env.example; inside the archive it is .env.example as used below.
 
 For a fresh deployment directory, the GitHub CLI option is:
 
