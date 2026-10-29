@@ -26,13 +26,15 @@ def validate(directory: Path, command: list[str], source_compose: Path | None = 
             env.update(COMPOSE_PROFILES=profiles, COMPOSE_PROJECT_NAME='release-validation')
             if 'postgres' not in expected:
                 env['DATABASE_URL'] = 'sqlite:///data/proxy.db'
-            if 'redis' in expected:
-                env['PROXY_CONFIG_FILE'] = 'config.redis.toml'
+            env['CACHE_MODE'] = 'memory_redis' if 'redis' in expected else 'memory'
             compose_file = source_compose.resolve() if source_compose else directory / 'docker-compose.yml'
             compose = command + ['--env-file', fixture.name, '-f', str(compose_file)]
             config = json.loads(subprocess.check_output(compose + ['config', '--format', 'json'], env=env, text=True))
             services = config['services']
             assert set(services) == expected, (profiles, set(services))
+            assert services['proxy']['environment']['CACHE_MODE'] == env['CACHE_MODE']
+            assert services['proxy']['environment']['PROXY_CONFIG'] == '/app/config.toml'
+            assert len([v for v in services['proxy']['volumes'] if v.get('target', '').endswith('.toml')]) == 1
             if source_compose:
                 assert services['proxy']['build']['dockerfile'] == 'docker/Dockerfile'
             else:

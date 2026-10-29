@@ -8,7 +8,9 @@ An early release for evaluation and controlled deployments. The application imag
 
 **Verified build:** [v0.1.0 release workflow](https://github.com/Dizzd/link-proxy/actions/runs/40891455791) passed image build, full-stack smoke test, GHCR push and asset upload. The downloaded deployment bundle was checked against all eight SHA256SUMS entries.
 
-The release contains dynamic-url-proxy-deploy.tar.gz, a single docker-compose.yml, .env.example, Caddyfile, memory/Redis TOML configurations, release metadata and SHA256SUMS. The bundle pins the exact GHCR image digest; no source build, Rust or Node is required on the deployment server.
+**Configuration compatibility:** the published v0.1.0 bundle remains unchanged and uses its original configuration selection. The current source/next image uses only config.toml plus CACHE_MODE; v0.1.0 does not read CACHE_MODE. For that older release, follow its bundled README. Do not pair a new deployment bundle with the old image when expecting environment-based cache selection.
+
+New release bundles contain dynamic-url-proxy-deploy.tar.gz, a single docker-compose.yml, .env.example, Caddyfile, config.toml, release metadata and SHA256SUMS. The bundle pins the exact GHCR image digest; no source build, Rust or Node is required on the deployment server.
 
 ## Capabilities
 
@@ -25,7 +27,7 @@ The release contains dynamic-url-proxy-deploy.tar.gz, a single docker-compose.ym
 
 Normal routing requests read only the immutable in-memory snapshot; they never query SQL or Redis. Draft changes take effect after publication, and import commit publishes one validated batch.
 
-## Deploy v0.1.0 (prebuilt image)
+## Deploy a release image
 
 The Container release GitHub Action runs when a GitHub Release is published. It gates on Rust, frontend and deployment checks, builds the linux/amd64 image, smoke-tests PostgreSQL + proxy + Caddy + Redis, pushes the tested image to ghcr.io/dizzd/link-proxy:RELEASE_TAG and uploads an immutable-digest deployment bundle to that release. Release credentials use GITHUB_TOKEN; administrator/database passwords are set only on your server.
 
@@ -60,7 +62,7 @@ The image targets **linux/amd64**. The package owner can make GHCR public for an
 
 Pre-releases are not resolved by GitHub's releases/latest download URL. Always select the v0.1.0 tag explicitly. If the repository is made public, its direct archive URL is https://github.com/Dizzd/link-proxy/releases/download/v0.1.0/dynamic-url-proxy-deploy.tar.gz.
 
-Set these environment values before startup:
+Set these environment values before startup for the current source/new image (use the bundled README for v0.1.0):
 
 | Variable | Purpose |
 |---|---|
@@ -69,13 +71,13 @@ Set these environment values before startup:
 | PUBLIC_HOST | :80 for initial HTTP/IP access, or a DNS hostname such as links.example.com for HTTPS |
 | COMPOSE_PROJECT_NAME | Stable installation name; keep it unchanged on upgrades |
 | COMPOSE_PROFILES | postgres,caddy by default; add redis if required |
-| PROXY_CONFIG_FILE | config.toml by default; config.redis.toml for Redis mode |
+| CACHE_MODE | memory by default; memory_redis enables Redis using the same config.toml |
 
 DATABASE_URL in the example derives from the PostgreSQL settings. URL-encode non-hex passwords explicitly. Application credentials are initialized only when the database has no administrator; restarting with another password does not reset an existing account.
 
 One docker-compose.yml defines PostgreSQL, proxy, Caddy and Redis. The example COMPOSE_PROFILES=postgres,caddy starts the first three. PUBLIC_HOST=:80 serves HTTP/IP traffic; set your real DNS hostname for Caddy automatic HTTPS and open ports 80/443. Administration and direct proxy access remain on host loopback. Access Admin using ssh -N -L 19000:127.0.0.1:9000 USER@SERVER_IP, then open http://127.0.0.1:19000.
 
-Enable Redis with COMPOSE_PROFILES=postgres,caddy,redis and PROXY_CONFIG_FILE=config.redis.toml. For SQLite, remove postgres from the profiles and set DATABASE_URL=sqlite:///data/proxy.db. Remove caddy if using an existing external ingress. No overlay files are required.
+Enable Redis with COMPOSE_PROFILES=postgres,caddy,redis and CACHE_MODE=memory_redis. For SQLite, remove postgres from the profiles and set DATABASE_URL=sqlite:///data/proxy.db. Remove caddy if using an existing external ingress. No overlay files are required.
 
 For source development, the root docker-compose.yml contains the same services but builds the application locally: copy .env.example to .env, edit it, then run docker compose up --build -d. Dockerfile, migrations and the built frontend are included in the published image; release hosts need no Rust/Node toolchain.
 
@@ -172,6 +174,8 @@ cargo build --locked -p proxy-server
 python3 scripts/e2e.py
 # Requires PostgreSQL server tools; creates a disposable cluster:
 python3 scripts/postgres_test.py
+# Requires redis-server; exercises CACHE_MODE using the same TOML file:
+python3 scripts/configuration_test.py
 bash scripts/benchmark.sh
 ```
 

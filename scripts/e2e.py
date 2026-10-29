@@ -29,7 +29,7 @@ upstream_cidr_allowlist=["127.0.0.1/32"]
 [cache.redis]
 sync_interval_seconds=1
 ''')
-  env=os.environ.copy();env.pop('DATABASE_URL',None);env.update(ADMIN_USERNAME='e2e-admin',ADMIN_PASSWORD=secrets.token_urlsafe(24),PROXY_CONFIG=str(config),ADMIN_API_TOKEN='isolated-e2e-token-24-bytes-minimum',PROXY_E2E_ADMIN=f'http://127.0.0.1:{admin}',PROXY_E2E_PROXY=f'http://127.0.0.1:{proxy}',PROXY_E2E_UPSTREAM_PORT=str(upstream))
+  env=os.environ.copy();env.pop('DATABASE_URL',None);env.pop('CACHE_MODE',None);env.update(ADMIN_USERNAME='e2e-admin',ADMIN_PASSWORD=secrets.token_urlsafe(24),PROXY_CONFIG=str(config),ADMIN_API_TOKEN='isolated-e2e-token-24-bytes-minimum',PROXY_E2E_ADMIN=f'http://127.0.0.1:{admin}',PROXY_E2E_PROXY=f'http://127.0.0.1:{proxy}',PROXY_E2E_UPSTREAM_PORT=str(upstream))
   def read(path):
    request=urllib.request.Request(f'http://127.0.0.1:{admin}{path}',headers={'Authorization':'Bearer '+env['ADMIN_API_TOKEN']})
    with urllib.request.urlopen(request,timeout=2) as response:return json.load(response)

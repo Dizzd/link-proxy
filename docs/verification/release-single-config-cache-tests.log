@@ -1,0 +1,55 @@
+   Compiling serde_core v1.0.229
+   Compiling byteorder v1.5.0
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.154
+   Compiling smallvec v1.16.4
+   Compiling parking_lot_core v0.9.12
+   Compiling parking_lot v0.12.5
+   Compiling icu_normalizer v2.4.0
+   Compiling tokio v1.53.2
+   Compiling idna_adapter v1.2.2
+   Compiling idna v1.1.0
+   Compiling url v2.5.8
+   Compiling futures-intrusive v0.5.0
+   Compiling either v1.19.0
+   Compiling sqlx-core v0.8.6
+   Compiling serde_urlencoded v0.7.1
+   Compiling tokio-stream v0.1.19
+   Compiling sqlx-sqlite v0.8.6
+   Compiling sqlx-postgres v0.8.6
+   Compiling sqlx-macros-core v0.8.6
+   Compiling sqlx-macros v0.8.6
+   Compiling tokio-util v0.7.20
+   Compiling tracing-serde v0.2.0
+   Compiling chrono v0.4.45
+   Compiling uuid v1.26.1
+   Compiling proxy-domain v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-domain)
+   Compiling tracing-subscriber v0.3.23
+   Compiling sqlx v0.8.6
+   Compiling combine v4.6.9
+   Compiling tokio-rustls v0.26.6
+   Compiling prometheus v0.14.0
+   Compiling serde_spanned v1.1.2
+   Compiling toml_datetime v0.7.5+spec-1.1.0
+   Compiling toml v0.9.12+spec-1.1.0
+   Compiling redis v0.32.7
+   Compiling proxy-observability v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-observability)
+   Compiling proxy-storage v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-storage)
+   Compiling ipnet v2.12.2
+   Compiling proxy-cache v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-cache)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 34.27s
+     Running unittests src/lib.rs (/home/ubuntu/link-proxy-target/debug/deps/proxy_cache-5ec501880a1dc692)
+
+running 3 tests
+test config::tests::absent_cache_mode_preserves_toml_configuration ... ok
+test config::tests::invalid_cache_modes_fail_without_mutating_configuration ... ok
+test config::tests::cache_mode_override_controls_redis_without_replacing_tuning ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests proxy_cache
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

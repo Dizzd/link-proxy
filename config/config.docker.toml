@@ -23,6 +23,7 @@ max_proxy_body_bytes = 16777216
 admin_requests_per_minute = 6000
 
 [cache]
+# CACHE_MODE overrides mode and redis.enabled at startup (memory or memory_redis).
 mode = "memory"
 [cache.memory]
 enabled = true

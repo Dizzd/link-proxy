@@ -1,0 +1,10 @@
+Single-file release profiles:
+Compose profile validation passed: SQLite only
+Compose profile validation passed: caddy
+Compose profile validation passed: postgres,caddy
+Compose profile validation passed: postgres,caddy,redis
+Single-file source profiles:
+Compose profile validation passed: SQLite only
+Compose profile validation passed: caddy
+Compose profile validation passed: postgres,caddy
+Compose profile validation passed: postgres,caddy,redis

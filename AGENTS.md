@@ -10,7 +10,7 @@ Do not report acceptance criteria or benchmarks as passed without execution evid
 
 ## Workspace and maintenance
 - Domain is framework independent; Mapping owns the entire rule/action AST.
-- Dependency direction: domain → routing/storage/cache/import → application → admin API/Pingora → binary. Do not introduce request-time persistence calls.
+- Dependency direction: domain â†’ routing/storage/cache/import â†’ application â†’ admin API/Pingora â†’ binary. Do not introduce request-time persistence calls.
 - Root Cargo.toml is a virtual workspace. Production source lives in apps/ and crates/; Rust integration tests live with their owning crates.
 - Build Pingora on Linux/WSL. Keep Tokio =1.53.2 while Pingora 0.9 uses zero-capacity BufStream; see upstream cloudflare/pingora#1059 and run the real HTTP harness before changing versions.
 - Embedded migration sources are migrations/sqlite and migrations/postgres, selected by backend. Never edit an applied migration; add a new numeric SQL migration.
@@ -21,3 +21,5 @@ Do not report acceptance criteria or benchmarks as passed without execution evid
 - Run cargo fmt --all -- --check, cargo check --workspace, cargo test --workspace --all-features, cargo clippy --workspace --all-targets --all-features -- -D warnings, pnpm --dir apps/admin-web build and pnpm --dir apps/admin-web test.
 - Build proxy-server and run python3 scripts/e2e.py for actual HTTP, process recovery and graceful-shutdown verification. Ignored tests require explicit execution; record evidence under docs/verification and update docs/IMPLEMENTATION_PLAN.md honestly.
 - Docker and production benchmarks require a real runtime; never mark them passed from file inspection.
+
+- Runtime deployments use one config.toml. CACHE_MODE selects memory/memory_redis at startup and sets Redis enabled consistently; do not add mode-specific duplicate TOML files. Preserve all other operator tuning and reject invalid overrides.

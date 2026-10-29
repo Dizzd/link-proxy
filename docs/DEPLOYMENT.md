@@ -11,7 +11,7 @@ Use .github/workflows/release.yml by publishing a GitHub Release with a Docker-c
 
 The workflow uses contents:write and packages:write only on its publishing job, authenticated by GITHUB_TOKEN. No external registry password or application/database secret is required in GitHub. Existing packages must grant this repository Actions write access; organization package policies can restrict publication. First-published GHCR packages may be private: make the package public for anonymous pulls or authenticate the server with read:packages access. Private Release downloads also require authorized GitHub access. The workflow never changes package visibility or deploys onto a server automatically.
 
-Assets include dynamic-url-proxy-deploy.tar.gz, docker-compose.yml, .env.example, Caddyfile, config.toml, config.redis.toml, README.md, release.json and SHA256SUMS. The tar archive contains only the runtime files and no source/.env/secrets. Download the archive plus SHA256SUMS to verify downloaded/extracted files with sha256sum -c SHA256SUMS. A successful workflow uploads these files to the existing release. Reruns replace assets with the same filenames; existing installed image digests remain immutable.
+Assets include dynamic-url-proxy-deploy.tar.gz, docker-compose.yml, .env.example, Caddyfile, config.toml, README.md, release.json and SHA256SUMS. The tar archive contains only the runtime files and no source/.env/secrets. Download the archive plus SHA256SUMS to verify downloaded/extracted files with sha256sum -c SHA256SUMS. A successful workflow uploads these files to the existing release. Reruns replace assets with the same filenames; existing installed image digests remain immutable.
 
 On a fresh server (Docker Compose >= 2.20.0, linux/amd64):
 
@@ -44,11 +44,11 @@ The example enables postgres,caddy. Optional dependencies use Compose required:f
 
 PUBLIC_HOST=:80 supports initial HTTP/IP access. Set a real DNS hostname and open 80/443 for Caddy automatic HTTPS. Multiple DNS hostnames may be comma-separated. The bundled Caddyfile preserves Host and forwards only routing traffic to proxy:8080. Admin remains private: run ssh -N -L 19000:127.0.0.1:9000 USER@SERVER_IP locally and open http://127.0.0.1:19000. Container localhost refers to the container itself; Caddy uses the Compose service name proxy, and the application uses postgres for the bundled database.
 
-To enable Redis, set COMPOSE_PROFILES=postgres,caddy,redis and PROXY_CONFIG_FILE=config.redis.toml. SQLite uses COMPOSE_PROFILES=caddy and DATABASE_URL=sqlite:///data/proxy.db. External ingress users remove caddy and target the loopback port; external PostgreSQL users remove postgres and supply their external URL. An empty profile list starts only proxy. Never run two control-plane replicas against the same DB.
+To enable Redis, set COMPOSE_PROFILES=postgres,caddy,redis and CACHE_MODE=memory_redis. SQLite uses COMPOSE_PROFILES=caddy and DATABASE_URL=sqlite:///data/proxy.db. External ingress users remove caddy and target the loopback port; external PostgreSQL users remove postgres and supply their external URL. An empty profile list starts only proxy. Never run two control-plane replicas against the same DB.
 
 ## Source-build containers and updates
 
-The root docker-compose.yml declares the same full stack, with build instead of an image reference. Copy the root .env.example, edit it and run docker compose up --build -d. The old PostgreSQL/Redis overlay files have been consolidated and removed; no -f chains are needed. Source Compose mounts config/config.docker.toml, config/config.redis.toml and config/caddy/Caddyfile. Release Compose uses flat paths from the downloaded bundle.
+The root docker-compose.yml declares the same full stack, with build instead of an image reference. Copy the root .env.example, edit it and run docker compose up --build -d. The old PostgreSQL/Redis overlay files have been consolidated and removed; no -f chains are needed. Source Compose mounts config/config.docker.toml and config/caddy/Caddyfile. Release Compose uses flat paths from the downloaded bundle.
 
 The image builds Node/Rust in separate stages and runs as UID 10001, with a public minimal health probe. Pingora has a two-second grace plus ten-second final shutdown timeout; Compose permits 20 seconds. The release workflow smoke-tests the actual image before publishing, but it must run successfully on GitHub before a particular release is considered verified. Docker Engine is unavailable on the local implementation host; Compose parsing can be verified independently without a daemon.
 
@@ -70,3 +70,9 @@ For Compose, enable the postgres profile and fill POSTGRES_USER, POSTGRES_DB, PO
 Open the private admin UI and sign in with the bootstrap username/password. Existing users persist and environment changes do not replace passwords. Change password in Settings; this signs out every session. For recovery, stop the control plane, set ADMIN_USERNAME to an existing user and ADMIN_PASSWORD to the replacement, and execute proxy-server --reset-admin-password. Restart normally. After bootstrap the password environment variable can be removed (Compose currently requires it for interpolation). No default password is shipped.
 
 Keep one active control-plane process per database because import job ownership is local. Session cookies are HttpOnly and SameSite=Strict; set auth.secure_cookies=true behind HTTPS. API tokens are optional and disabled by default. Public /health/ready supports container health checks without credentials; /metrics and management APIs remain protected.
+
+## Single-file cache mode and older images
+
+Current source and new image builds use only config.toml. Set CACHE_MODE=memory (default) or CACHE_MODE=memory_redis in .env. The latter automatically enables Redis in settings; prefix, URL environment name and timeouts are read from the same file. Add redis to COMPOSE_PROFILES when using the bundled Redis service. With no environment override, the TOML mode/enabled flags are preserved. Empty/unknown cache modes fail startup.
+
+For an older installation, preserve the effective TOML contents as config.toml, replace the old file-selection setting with CACHE_MODE and use the new Compose/image together. Keep allowlists/authentication settings, database URL, project name and volumes unchanged. The published v0.1.0 image and artifacts are not rewritten: that binary ignores CACHE_MODE, so follow its bundled instructions or configure cache.mode/cache.redis.enabled directly until upgrading.

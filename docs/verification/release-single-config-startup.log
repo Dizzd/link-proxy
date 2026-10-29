@@ -1,0 +1,5 @@
+Same config.toml startup passed: CACHE_MODE=unset
+Same config.toml startup passed: CACHE_MODE=memory_redis
+Same config.toml startup passed: CACHE_MODE=memory
+Invalid/empty cache mode startup rejection passed
+Non-UTF-8 cache mode startup rejection passed

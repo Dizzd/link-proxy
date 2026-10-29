@@ -9,3 +9,4 @@ pnpm --dir apps/admin-web build
 pnpm --dir apps/admin-web test
 cargo build --locked -p proxy-server
 python3 scripts/e2e.py --binary "${CARGO_TARGET_DIR:-target}/debug/proxy-server"
+python3 scripts/configuration_test.py --binary "${CARGO_TARGET_DIR:-target}/debug/proxy-server"

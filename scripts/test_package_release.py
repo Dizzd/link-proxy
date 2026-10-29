@@ -26,7 +26,7 @@ class ReleasePackageTests(unittest.TestCase):
             with tarfile.open(output / ARCHIVE) as archive:
                 names = {member.name for member in archive.getmembers()}
                 self.assertEqual(names, {'.env.example', 'docker-compose.yml', 'Caddyfile',
-                                         'config.toml', 'config.redis.toml', 'README.md', 'release.json'})
+                                         'config.toml', 'README.md', 'release.json'})
                 self.assertTrue(all(member.isfile() and member.mode == 0o644 for member in archive.getmembers()))
             for line in (output / 'SHA256SUMS').read_text().splitlines():
                 digest, name = line.split('  ', 1)

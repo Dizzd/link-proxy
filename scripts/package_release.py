@@ -26,7 +26,6 @@ def package(repository: str, version: str, image: str, output: Path) -> None:
         'docker-compose.yml': ROOT / 'deploy/docker-compose.yml',
         'Caddyfile': ROOT / 'config/caddy/Caddyfile',
         'config.toml': ROOT / 'config/config.docker.toml',
-        'config.redis.toml': ROOT / 'config/config.redis.toml',
         'README.md': ROOT / 'deploy/README.md',
     }
     for target, source in files.items():

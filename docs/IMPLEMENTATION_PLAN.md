@@ -122,3 +122,21 @@ Architecture: reuse the Rust/frontend CI workflows as release gates; build linux
 Recovery run https://github.com/Dizzd/link-proxy/actions/runs/40891455791 succeeded from release commit 21197a0697bc880eebb8f1ffc06946a522dda9fe. It built the image and passed the actual container smoke test covering the React UI, password session, PostgreSQL, Redis, publication and Caddy -> Pingora redirect, then pushed GHCR and uploaded nine release assets. All Compose combinations passed again on the hosted runner.
 
 Published image: ghcr.io/dizzd/link-proxy:v0.1.0, pinned manifest sha256:a319e587c99eeca6b8fa452e35e905fe1d566608c8c74b4ee77a5422d68c258d. Downloaded the real release archive and SHA256SUMS using authenticated GitHub access: all eight checksums and seven archive members matched, and release.json/.env.example referenced the pushed digest. Evidence: docs/verification/release-v0.1.0-verification.log. GitHub names the standalone environment asset default.env.example; the archive preserves .env.example. The completed release remains a pre-release, not Latest. The tag remains at the verified image source commit; subsequent documentation-only commits do not retarget published artifacts.
+
+## Single runtime configuration plan
+
+Use one deployed config.toml for all cache modes. CACHE_MODE overrides only cache.mode and cache.redis.enabled at startup; all memory snapshots, database authority, limits and Redis tuning remain unchanged. Missing CACHE_MODE preserves TOML behavior, while unknown/empty/non-Unicode overrides fail startup.
+
+- [x] Implement and unit-test cache mode override parsing in proxy-cache, including reverse overrides, preserved Redis tuning and invalid values.
+- [x] Remove config/config.redis.toml and its bind mounts; set CACHE_MODE in source/release Compose and environment examples, with one fixed /app/config.toml.
+- [x] Update release packaging/profile validation/full-stack smoke and add real binary startup checks using the same file in memory/Redis modes. Update CI to run those checks.
+- [x] Update README/deployment/cache documentation with the single-file flow and old v0.1.0 compatibility. Verify fmt/check/test/clippy, frontend build, packaging, Compose, and HTTP/Redis regressions. Published v0.1.0 artifacts remain unchanged; new environment support requires a new image.
+
+### Single-file configuration verification
+
+- Removed mode-specific TOML files and binds from source/release Compose and the package manifest; deployment uses only /app/config.toml. CACHE_MODE defaults to memory and enables/disables Redis consistently when explicitly set. TOML tuning is retained, and absent overrides preserve legacy TOML behavior.
+- Added three cache configuration unit tests and a real binary startup fixture. The same unchanged TOML passed unset, memory_redis with an owned Redis daemon, and memory with unreachable Redis; invalid, empty and non-UTF-8 environment values were rejected before startup. No process-global environment mutation or unsafe code was added to tests.
+- Executed Linux cargo fmt/check, all-feature workspace tests (59 passed, 10 external/scale tests ignored), clippy with all targets/features and -D warnings, and proxy-server build. All passed. Production frontend build passed; no UI behavior changed.
+- Three packaging tests and eight real Compose CLI combinations (source/release, SQLite-only, SQLite+Caddy, PostgreSQL+Caddy and PostgreSQL+Caddy+Redis) passed, asserting one TOML mount, a fixed PROXY_CONFIG and the selected CACHE_MODE. actionlint and Python compilation passed. The future image smoke now uses CACHE_MODE with the single TOML file.
+- Re-ran five actual Pingora HTTP tests each on SQLite and PostgreSQL, PostgreSQL migration/import/concurrency/recovery integration, both process-restart/password-reset flows and three real Redis notification/failure tests. All passed. Evidence: docs/verification/release-single-config-*.log.
+- New container image build/publication is not claimed: the current v0.1.0 release and pinned image remain unchanged. CACHE_MODE requires a newly built image; legacy images still support one TOML when its mode/enabled fields are set directly. Migration documentation preserves the effective old settings, data volumes and project name. Existing SQL migration bytes were not modified.

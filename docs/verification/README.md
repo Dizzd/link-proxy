@@ -36,3 +36,7 @@ release-package-tests.log records packaging/secret-exclusion/digest/checksum tes
 ## Verified v0.1.0 container publication
 
 The hosted recovery workflow https://github.com/Dizzd/link-proxy/actions/runs/40891455791 completed successfully, including the actual Docker image build and full PostgreSQL/proxy/Caddy/Redis smoke test, registry push and release upload. This supersedes the earlier local-only Docker limitation for v0.1.0. release-v0.1.0-verification.log records a fresh authenticated archive download, eight checksum comparisons and agreement between the bundle's pinned image and the pushed manifest digest. Other deployment environments and architectures are not covered by this run.
+
+## Single runtime TOML configuration
+
+release-single-config-*.log records the startup override fixture with a real Redis daemon, 59 Rust tests, fmt/check/clippy, source build, HTTP/restart/reset tests on both databases, PostgreSQL/Redis regressions, single-file Compose/profile assertions, packaging integrity tests and frontend build. These checks exercise the updated binary and generated configuration locally; they do not describe a new published image. The immutable v0.1.0 release keeps its original behavior.

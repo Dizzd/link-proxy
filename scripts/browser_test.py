@@ -35,6 +35,7 @@ def main():
         config.write_text(f'admin_listen="127.0.0.1:{admin}"\nproxy_listen="127.0.0.1:{proxy}"\ndatabase_url={json.dumps(url)}\n')
         env = os.environ.copy()
         env.pop('DATABASE_URL', None)
+        env.pop('CACHE_MODE', None)
         env.update(ADMIN_USERNAME='browser-admin', ADMIN_PASSWORD=secrets.token_urlsafe(24), PROXY_CONFIG=str(config))
         settings = {key: env[key] for key in ['ADMIN_USERNAME', 'ADMIN_PASSWORD']}
         settings.update(PLAYWRIGHT_BASE_URL=f'http://127.0.0.1:{admin}', PROXY_BROWSER_URL=f'http://127.0.0.1:{proxy}', EXPECT_DATABASE_BACKEND='postgresql' if args.database_url else 'sqlite')

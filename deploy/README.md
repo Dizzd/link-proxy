@@ -20,7 +20,7 @@ docker compose ps
 
 Set ADMIN_PASSWORD (at least 12 bytes), POSTGRES_PASSWORD (generate with openssl rand -hex 32) and PUBLIC_HOST. The example DATABASE_URL interpolates the PostgreSQL user/password/database. For non-hex passwords, URL-encode the password in DATABASE_URL explicitly. Never commit .env.
 
-One docker-compose.yml defines every service. COMPOSE_PROFILES=postgres,caddy starts PostgreSQL, the proxy and Caddy. Add redis and select PROXY_CONFIG_FILE=config.redis.toml to enable the optional Redis cache. PostgreSQL and Redis expose no host ports. Direct proxy/admin ports bind to host loopback by default.
+One docker-compose.yml defines every service. COMPOSE_PROFILES=postgres,caddy starts PostgreSQL, the proxy and Caddy. Add redis and set CACHE_MODE=memory_redis to enable the optional Redis cache. PostgreSQL and Redis expose no host ports. Direct proxy/admin ports bind to host loopback by default.
 
 PUBLIC_HOST=:80 enables HTTP/IP access. For public HTTPS, set PUBLIC_HOST to your DNS hostname, point its A/AAAA records to the server and open TCP 80/443 (UDP 443 is optional for HTTP/3). Caddy obtains/renews certificates and preserves Host for routing. Multiple hostnames can be comma-separated in PUBLIC_HOST; each must have valid DNS. Caddy exposes only the routing listener, not the administration UI. If another ingress already occupies 80/443, remove caddy from COMPOSE_PROFILES and point that ingress at 127.0.0.1:8080.
 
@@ -34,12 +34,12 @@ ssh -N -L 19000:127.0.0.1:9000 USER@SERVER_IP
 
 Open http://127.0.0.1:19000 and sign in with ADMIN_USERNAME/ADMIN_PASSWORD. Startup initializes only an empty user table. Change the password in Settings; later changes to .env do not overwrite stored credentials. Create draft mappings with the actual source hostname and publish them from Revisions. Unknown routes return 404 until configured.
 
-Before reverse proxy actions, edit upstream_cidr_allowlist in config.toml (or config.redis.toml when Redis is enabled); it denies every upstream by default. These files are mounted read-only. Restart proxy after configuration changes. Redirect mappings need no upstream network allowlist.
+Before reverse proxy actions, edit upstream_cidr_allowlist in config.toml; it denies every upstream by default. This file is mounted read-only. Restart proxy after configuration changes. Redirect mappings need no upstream network allowlist.
 
 ## Alternatives
 
 - SQLite + Caddy: set COMPOSE_PROFILES=caddy and DATABASE_URL=sqlite:///data/proxy.db. SQLite persists in proxy-data. This does not transfer existing PostgreSQL/SQLite data between backends.
-- PostgreSQL + Caddy + Redis: set COMPOSE_PROFILES=postgres,caddy,redis and PROXY_CONFIG_FILE=config.redis.toml. Redis is advisory; routing always uses local memory.
+- PostgreSQL + Caddy + Redis: set COMPOSE_PROFILES=postgres,caddy,redis and CACHE_MODE=memory_redis. Redis is advisory; routing always uses local memory. CACHE_MODE overrides only cache.mode and cache.redis.enabled; all Redis timeouts/prefixes/URL environment settings remain in config.toml.
 - External PostgreSQL: remove postgres from COMPOSE_PROFILES and set DATABASE_URL to the external database URL (use TLS verification outside trusted local networking).
 - No Caddy: remove caddy from COMPOSE_PROFILES. PROXY_BIND_IP stays 127.0.0.1; adjust only if intentionally exposing the direct listener.
 
@@ -63,3 +63,7 @@ docker compose exec -T postgres sh -c 'pg_dump -U "$POSTGRES_USER" -d "$POSTGRES
 ```
 
 GHCR packages are private by default on first publication. For anonymous pulls, the repository owner must make the package public. Otherwise run docker login ghcr.io using a token authorized for read:packages before docker compose pull. Private GitHub Release downloads also require GitHub authentication. The release image currently targets linux/amd64 only.
+
+## Migrating an older two-file installation
+
+This image supports CACHE_MODE at startup. Keep your chosen old configuration content as config.toml (including allowlists/auth settings and Redis tuning), remove the old file-selection variable from .env and set CACHE_MODE=memory or memory_redis. Remove the obsolete extra TOML bind mount when replacing Compose. No database migration or configuration revision is needed for this file-layout change. Back up the old file before removing it. Published v0.1.0 images ignore CACHE_MODE; use a newly built image for this flow. Older images can still use a single TOML file by setting cache.mode and cache.redis.enabled directly in that file.

@@ -29,7 +29,7 @@ def main(image: str):
         env.update(PROXY_IMAGE=image, COMPOSE_PROJECT_NAME='proxy-smoke-' + uuid.uuid4().hex[:12],
                    COMPOSE_PROFILES='postgres,caddy,redis', ADMIN_USERNAME='smoke-admin',
                    ADMIN_PASSWORD=secrets.token_urlsafe(24), POSTGRES_USER='proxy', POSTGRES_DB='proxy',
-                   POSTGRES_PASSWORD=secrets.token_hex(32), PROXY_CONFIG_FILE='config.redis.toml',
+                   POSTGRES_PASSWORD=secrets.token_hex(32), CACHE_MODE='memory_redis',
                    PUBLIC_HOST=':80', PROXY_BIND_IP='127.0.0.1', ADMIN_PORT='0', PROXY_PORT='0', HTTP_PORT='0', HTTPS_PORT='0')
         env['DATABASE_URL'] = f"postgres://proxy:{env['POSTGRES_PASSWORD']}@postgres:5432/proxy"
         # Do not load the example or any caller's real .env file.

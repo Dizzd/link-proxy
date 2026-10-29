@@ -57,6 +57,21 @@ impl Default for CacheSettings {
         }
     }
 }
+impl CacheSettings {
+    fn apply_mode_override(&mut self, value: Option<&str>) -> Result<()> {
+        let Some(value) = value else {
+            return Ok(());
+        };
+        let mode = match value {
+            "memory" => CacheMode::Memory,
+            "memory_redis" => CacheMode::MemoryRedis,
+            _ => anyhow::bail!("CACHE_MODE must be memory or memory_redis"),
+        };
+        self.redis.enabled = mode == CacheMode::MemoryRedis;
+        self.mode = mode;
+        Ok(())
+    }
+}
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct MemorySettings {
     pub enabled: bool,
@@ -128,6 +143,14 @@ impl Default for ImportLimits {
 impl Settings {
     pub fn load(path: &Path) -> Result<Self> {
         let mut settings: Self = toml::from_str(&std::fs::read_to_string(path)?)?;
+        let cache_mode = match std::env::var("CACHE_MODE") {
+            Ok(value) => Some(value),
+            Err(std::env::VarError::NotPresent) => None,
+            Err(std::env::VarError::NotUnicode(_)) => {
+                anyhow::bail!("CACHE_MODE must be valid UTF-8")
+            }
+        };
+        settings.cache.apply_mode_override(cache_mode.as_deref())?;
         if let Ok(url) = std::env::var(&settings.database_url_env) {
             ensure!(
                 !url.is_empty(),
@@ -184,6 +207,54 @@ impl Default for AuthSettings {
             secure_cookies: false,
             api_token_enabled: false,
             login_requests_per_minute: 20,
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn absent_cache_mode_preserves_toml_configuration() {
+        let mut cache: CacheSettings = toml::from_str(
+            "mode='memory_redis'\n[redis]\nenabled=true\nkey_prefix='custom:'\ncommand_timeout_ms=2500",
+        )
+        .unwrap();
+        cache.apply_mode_override(None).unwrap();
+        assert_eq!(cache.mode, CacheMode::MemoryRedis);
+        assert!(cache.redis.enabled);
+        assert_eq!(cache.redis.key_prefix, "custom:");
+        assert_eq!(cache.redis.command_timeout_ms, 2500);
+    }
+
+    #[test]
+    fn cache_mode_override_controls_redis_without_replacing_tuning() {
+        let mut cache = CacheSettings::default();
+        cache.redis.key_prefix = "custom:".into();
+        cache.redis.command_timeout_ms = 2500;
+        cache.apply_mode_override(Some("memory_redis")).unwrap();
+        assert_eq!(cache.mode, CacheMode::MemoryRedis);
+        assert!(cache.redis.enabled && cache.memory.enabled);
+        assert_eq!(cache.redis.key_prefix, "custom:");
+        assert_eq!(cache.redis.command_timeout_ms, 2500);
+        cache.apply_mode_override(Some("memory")).unwrap();
+        assert_eq!(cache.mode, CacheMode::Memory);
+        assert!(!cache.redis.enabled);
+        assert!(cache.memory.enabled);
+    }
+
+    #[test]
+    fn invalid_cache_modes_fail_without_mutating_configuration() {
+        let mut cache = CacheSettings::default();
+        for value in ["", "redis", "Memory", "memory_redis ", " "] {
+            let error = cache.apply_mode_override(Some(value)).unwrap_err();
+            assert_eq!(
+                error.to_string(),
+                "CACHE_MODE must be memory or memory_redis"
+            );
+            assert_eq!(cache.mode, CacheMode::Memory);
+            assert!(!cache.redis.enabled);
         }
     }
 }
