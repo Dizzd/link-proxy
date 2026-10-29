@@ -17,13 +17,13 @@ COPY migrations migrations
 RUN cargo build --locked --release -p proxy-server
 
 FROM debian:bookworm-slim AS runtime
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates libssl3 curl && rm -rf /var/lib/apt/lists/* && useradd --uid 10001 --create-home proxy && mkdir /data /app && chown proxy:proxy /data /app
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates libssl3 curl && rm -rf /var/lib/apt/lists/* && useradd --uid 10001 --user-group --create-home --shell /usr/sbin/nologin urlproxy && mkdir /data /app && chown urlproxy:urlproxy /data /app
 WORKDIR /app
 COPY --from=rust-builder /source/target/release/proxy-server /usr/local/bin/proxy-server
 COPY --from=admin-builder /source/apps/admin-web/dist /app/admin
 COPY config/config.docker.toml /app/config.toml
 ENV PROXY_CONFIG=/app/config.toml
-USER proxy
+USER urlproxy
 EXPOSE 8080 9000
 VOLUME /data
 STOPSIGNAL SIGTERM

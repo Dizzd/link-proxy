@@ -187,3 +187,14 @@ Live HTTP tests are ignored in ordinary `cargo test` because they require real l
 Real import samples: `examples/import/basic.csv`, `examples/import/advanced.json`, `examples/import/advanced.xlsx`. Download live templates from the import UI or `/api/v1/imports/templates?format=xlsx`. Full conditional example: `tests/fixtures/conditional_mappings.json`.
 
 Read [architecture](docs/ARCHITECTURE.md), [API contract](docs/API_CONTRACT.md), [routing semantics](docs/ROUTING_SPEC.md), [security](docs/SECURITY.md), [import/export](docs/BULK_IMPORT_EXPORT.md), and [configuration lifecycle](docs/CONFIGURATION_LIFECYCLE.md) before production deployment. Use one active control-plane process per database. PostgreSQL and SQLite use separate embedded migration directories; both support authenticated administration, staged imports and configuration recovery.
+
+## Release workflow recovery
+
+Maintainers can retry an existing release from its exact tag:
+
+```bash
+gh workflow run release.yml --repo Dizzd/link-proxy \
+  --ref v0.1.0 --field release_tag=v0.1.0
+```
+
+The workflow requires its Git ref and release_tag to match, so the validation jobs and image build use the same source commit. It refuses branch-based builds for a release tag. Debian's built-in proxy system user is preserved; the application image runs under its own urlproxy account (UID 10001).
