@@ -1,0 +1,6 @@
+   Compiling proxy-routing v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-routing)
+    Finished `release` profile [optimized] target(s) in 2.25s
+     Running `/home/ubuntu/link-proxy-target/release/examples/memory`
+mappings=1000 compile_ms=2 process_VmRSS:	    4188 kB
+mappings=10000 compile_ms=24 process_VmRSS:	   17556 kB
+mappings=100000 compile_ms=314 process_VmRSS:	  148880 kB

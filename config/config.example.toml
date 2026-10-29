@@ -1,0 +1,44 @@
+admin_listen = "127.0.0.1:9000"
+proxy_listen = "0.0.0.0:8080"
+# PostgreSQL: set DATABASE_URL=postgres://USER:PASSWORD@HOST:5432/DATABASE (URL-encode password).
+database_url = "sqlite://data/proxy.db"
+database_url_env = "DATABASE_URL"
+admin_token_env = "ADMIN_API_TOKEN"
+allow_remote_admin = false
+
+[auth]
+username_env = "ADMIN_USERNAME"
+password_env = "ADMIN_PASSWORD"
+session_ttl_seconds = 43200
+# Enable Secure cookies when administration is served over HTTPS.
+secure_cookies = false
+api_token_enabled = false
+login_requests_per_minute = 20
+
+[security]
+# Empty upstream allowlist denies ALL outbound proxy connections. Set explicit approved CIDRs.
+upstream_cidr_allowlist = []
+redirect_host_allowlist = []
+max_proxy_body_bytes = 16777216
+admin_requests_per_minute = 6000
+
+[cache]
+mode = "memory"
+[cache.memory]
+enabled = true
+[cache.redis]
+enabled = false
+url_env = "REDIS_URL"
+key_prefix = "dynamic_proxy:"
+connect_timeout_ms = 1000
+command_timeout_ms = 1000
+sync_interval_seconds = 30
+
+[imports]
+max_upload_bytes = 67108864
+max_records = 50000
+max_record_bytes = 65536
+max_uncompressed_bytes = 268435456
+workers = 2
+max_jobs = 100
+retention_hours = 72

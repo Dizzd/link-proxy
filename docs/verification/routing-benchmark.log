@@ -1,0 +1,150 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.27
+   Compiling stable_deref_trait v1.2.1
+   Compiling serde_core v1.0.229
+   Compiling serde v1.0.229
+   Compiling autocfg v1.5.1
+   Compiling litemap v0.8.3
+   Compiling cfg-if v1.0.5
+   Compiling writeable v0.6.4
+   Compiling num-traits v0.2.19
+   Compiling utf8_iter v1.0.4
+   Compiling syn v3.0.9
+   Compiling icu_normalizer_data v2.4.0
+   Compiling icu_properties_data v2.4.0
+   Compiling crossbeam-utils v0.8.23
+   Compiling syn v2.0.119
+   Compiling crossbeam-epoch v0.9.21
+   Compiling zerocopy v0.8.63
+   Compiling libc v0.2.191
+   Compiling synstructure v0.14.0
+   Compiling zmij v1.0.23
+   Compiling zerofrom-derive v0.1.8
+   Compiling yoke-derive v0.8.4
+   Compiling zerovec-derive v0.11.7
+   Compiling zerofrom v0.1.8
+   Compiling displaydoc v0.2.7
+   Compiling yoke v0.8.4
+   Compiling serde_derive v1.0.229
+   Compiling zerocopy-derive v0.8.63
+   Compiling zerovec v0.11.9
+   Compiling zerotrie v0.2.5
+   Compiling tinystr v0.8.5
+   Compiling potential_utf v0.1.6
+   Compiling icu_collections v2.4.0
+   Compiling icu_locale_core v2.4.0
+   Compiling smallvec v1.16.4
+   Compiling getrandom v0.4.3
+   Compiling icu_provider v2.4.0
+   Compiling crossbeam-deque v0.8.8
+   Compiling itoa v1.0.18
+   Compiling icu_properties v2.4.0
+   Compiling icu_normalizer v2.4.0
+   Compiling rayon-core v1.13.0
+   Compiling either v1.19.0
+   Compiling serde_json v1.0.154
+   Compiling siphasher v1.0.4
+   Compiling thiserror v2.0.21
+   Compiling iana-time-zone v0.1.65
+   Compiling chrono v0.4.45
+   Compiling phf_shared v0.12.1
+   Compiling idna_adapter v1.2.2
+   Compiling thiserror-impl v2.0.21
+   Compiling chrono-tz v0.10.4
+   Compiling plotters-backend v0.3.7
+   Compiling regex-syntax v0.8.11
+   Compiling ciborium-io v0.2.2
+   Compiling percent-encoding v2.3.2
+   Compiling clap_lex v1.1.1
+   Compiling memchr v2.8.3
+   Compiling half v2.7.1
+   Compiling anyhow v1.0.104
+   Compiling anstyle v1.0.14
+   Compiling ciborium-ll v0.2.2
+   Compiling clap_builder v4.6.7
+   Compiling regex-automata v0.4.18
+   Compiling form_urlencoded v1.2.2
+   Compiling plotters-svg v0.3.7
+   Compiling idna v1.1.0
+   Compiling phf v0.12.1
+   Compiling uuid v1.26.1
+   Compiling itertools v0.13.0
+   Compiling cast v0.3.0
+   Compiling bytes v1.12.1
+   Compiling same-file v1.0.6
+   Compiling http v1.5.0
+   Compiling walkdir v2.5.0
+   Compiling criterion-plot v0.6.0
+   Compiling proxy-domain v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-domain)
+   Compiling rayon v1.12.0
+   Compiling url v2.5.8
+   Compiling plotters v0.3.7
+   Compiling regex v1.13.1
+   Compiling clap v4.6.7
+   Compiling tinytemplate v1.2.1
+   Compiling ciborium v0.2.2
+   Compiling oorandom v11.1.5
+   Compiling matchit v0.8.4
+   Compiling anes v0.1.6
+   Compiling proxy-routing v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-routing)
+   Compiling criterion v0.7.0
+    Finished `bench` profile [optimized] target(s) in 59.97s
+     Running benches/routing_bench.rs (/home/ubuntu/link-proxy-target/release/deps/routing_bench-8e443eff70778f84)
+Gnuplot not found, using plotters backend
+Benchmarking routing/exact_lookup/1000
+Benchmarking routing/exact_lookup/1000: Warming up for 1.0000 s
+Benchmarking routing/exact_lookup/1000: Collecting 20 samples in estimated 2.0000 s (10M iterations)
+Benchmarking routing/exact_lookup/1000: Analyzing
+routing/exact_lookup/1000
+                        time:   [188.40 ns 191.13 ns 194.72 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking routing/snapshot_compile/1000
+Benchmarking routing/snapshot_compile/1000: Warming up for 1.0000 s
+Benchmarking routing/snapshot_compile/1000: Collecting 20 samples in estimated 2.1114 s (840 iterations)
+Benchmarking routing/snapshot_compile/1000: Analyzing
+routing/snapshot_compile/1000
+                        time:   [1.7594 ms 1.8000 ms 1.8380 ms]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking routing/exact_lookup/10000
+Benchmarking routing/exact_lookup/10000: Warming up for 1.0000 s
+Benchmarking routing/exact_lookup/10000: Collecting 20 samples in estimated 2.0000 s (9.9M iterations)
+Benchmarking routing/exact_lookup/10000: Analyzing
+routing/exact_lookup/10000
+                        time:   [189.89 ns 193.54 ns 198.13 ns]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking routing/snapshot_compile/10000
+Benchmarking routing/snapshot_compile/10000: Warming up for 1.0000 s
+Benchmarking routing/snapshot_compile/10000: Collecting 20 samples in estimated 2.7269 s (60 iterations)
+Benchmarking routing/snapshot_compile/10000: Analyzing
+routing/snapshot_compile/10000
+                        time:   [28.308 ms 28.974 ms 29.670 ms]
+Benchmarking routing/exact_lookup/100000
+Benchmarking routing/exact_lookup/100000: Warming up for 1.0000 s
+Benchmarking routing/exact_lookup/100000: Collecting 20 samples in estimated 2.0000 s (12M iterations)
+Benchmarking routing/exact_lookup/100000: Analyzing
+routing/exact_lookup/100000
+                        time:   [164.16 ns 168.71 ns 173.85 ns]
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) high mild
+  1 (5.00%) high severe
+Benchmarking routing/snapshot_compile/100000
+Benchmarking routing/snapshot_compile/100000: Warming up for 1.0000 s
+
+Warning: Unable to complete 20 samples in 2.0s. You may wish to increase target time to 11.2s, or reduce sample count to 10.
+Benchmarking routing/snapshot_compile/100000: Collecting 20 samples in estimated 11.201 s (20 iterations)
+Benchmarking routing/snapshot_compile/100000: Analyzing
+routing/snapshot_compile/100000
+                        time:   [319.25 ms 322.42 ms 325.96 ms]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+Benchmarking routing/condition_evaluation
+Benchmarking routing/condition_evaluation: Warming up for 1.0000 s
+Benchmarking routing/condition_evaluation: Collecting 20 samples in estimated 2.0000 s (6.8M iterations)
+Benchmarking routing/condition_evaluation: Analyzing
+routing/condition_evaluation
+                        time:   [273.29 ns 277.47 ns 280.72 ns]
+

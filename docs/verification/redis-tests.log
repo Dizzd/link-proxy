@@ -1,0 +1,42 @@
+   Compiling futures-util v0.3.34
+   Compiling flume v0.11.1
+   Compiling chrono v0.4.45
+   Compiling tokio-util v0.7.20
+   Compiling tracing-subscriber v0.3.23
+   Compiling proxy-domain v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-domain)
+   Compiling sqlx-core v0.8.6
+   Compiling futures-executor v0.3.34
+   Compiling combine v4.6.9
+   Compiling tokio-rustls v0.26.6
+   Compiling proxy-observability v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-observability)
+   Compiling sqlx-sqlite v0.8.6
+   Compiling hyper v1.12.0
+   Compiling chrono-tz v0.10.4
+   Compiling sqlx-macros-core v0.8.6
+   Compiling redis v0.32.7
+   Compiling sqlx-macros v0.8.6
+   Compiling sqlx v0.8.6
+   Compiling proxy-storage v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-storage)
+   Compiling multer v3.1.0
+   Compiling hyper-util v0.1.21
+   Compiling tower v0.5.3
+   Compiling proxy-routing v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-routing)
+   Compiling axum v0.8.9
+   Compiling tinytemplate v1.2.1
+   Compiling criterion v0.7.0
+   Compiling tempfile v3.27.0
+   Compiling proxy-cache v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-cache)
+   Compiling proxy-import v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-import)
+   Compiling proxy-application v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-application)
+   Compiling proxy-admin-api v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-admin-api)
+   Compiling dynamic-url-proxy v0.1.0 (/mnt/d/ETS/link-proxy)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 32.72s
+     Running tests/cache.rs (/home/ubuntu/link-proxy-target/debug/deps/cache-d1e9b8c3e39e7ead)
+
+running 3 tests
+test real_redis_notifications_are_advisory_and_newer_cache_is_not_activated ... ok
+test real_redis_versioned_cache_and_reconciliation ... ok
+test real_redis_z_failure_retains_live_snapshot ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.11s
+

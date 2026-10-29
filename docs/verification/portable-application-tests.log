@@ -1,0 +1,49 @@
+warning: could not load dep-graph from `/home/ubuntu/link-proxy-target/debug/incremental/proxy_domain-08ksd7h1pha90/s-hnnorlwiw3-0516bgh-working/dep-graph.bin`: memory map must have a non-zero length
+
+warning: `proxy-domain` (lib) generated 1 warning
+   Compiling proxy-application v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-application)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 17.84s
+     Running unittests src/lib.rs (/home/ubuntu/link-proxy-target/debug/deps/proxy_application-c88ad157458d6fde)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cache.rs (/home/ubuntu/link-proxy-target/debug/deps/cache-35079e31f23a04f8)
+
+running 7 tests
+test real_redis_notifications_are_advisory_and_newer_cache_is_not_activated ... ignored, Requires disposable Redis: python3 scripts/redis_test.py
+test real_redis_versioned_cache_and_reconciliation ... ignored, Requires REDIS_TEST_URL and a running real Redis server
+test real_redis_z_failure_retains_live_snapshot ... ignored, Shuts down disposable Redis; run only through scripts/redis_test.py
+test cache_envelope_rejects_stale_revision_and_tampering ... ok
+test memory_cache_is_distinct_from_active_snapshot ... ok
+test memory_mode_ignores_enabled_redis_and_invalid_environment ... ok
+test redis_unavailable_does_not_prevent_publish_or_requests ... ok
+
+test result: ok. 4 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running tests/imports.rs (/home/ubuntu/link-proxy-target/debug/deps/imports-56d1a8072bdd2f78)
+
+running 13 tests
+test file_structure_size_and_json_depth_are_bounded ... ok
+test csv_basic_headers_rows_and_encoding ... ok
+test duplicate_policies_and_complete_rule_replacement ... ok
+test duplicates_within_one_file_are_rejected ... ok
+test formula_injection_is_escaped ... ok
+test import_large_10000_and_50000_records ... ignored, Explicit scale validation: cargo test -p proxy-application --test imports import_large -- --ignored --nocapture
+test all_formats_round_trip_nested_rules ... ok
+test concurrent_draft_change_prevents_staged_import_activation ... ok
+test cancellation_removes_staging_without_mutation ... ok
+test invalid_destination_and_hostname_never_activate ... ok
+test dry_run_staging_commit_idempotency_and_rollback ... ok
+test restart_loads_committed_database_revision ... ok
+test import_one_thousand_records_publishes_once ... ok
+
+test result: ok. 12 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.03s
+
+   Doc-tests proxy_application
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

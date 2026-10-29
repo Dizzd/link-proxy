@@ -1,0 +1,2 @@
+external_id,mapping_key,source_host,source_path,default_target_url
+bad,bad,invalid host,/bad,file:///etc/passwd

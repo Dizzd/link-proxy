@@ -1,0 +1,46 @@
+   Compiling url v2.5.8
+   Compiling proxy-domain v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-domain)
+   Compiling sqlx-core v0.8.6
+   Compiling chrono-tz v0.10.4
+   Compiling sqlx-sqlite v0.8.6
+   Compiling sqlx v0.8.6
+   Compiling proxy-storage v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-storage)
+   Compiling proxy-routing v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-routing)
+   Compiling proxy-cache v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-cache)
+   Compiling proxy-import v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-import)
+    Finished `bench` profile [optimized] target(s) in 34.87s
+     Running benches/import_bench.rs (/home/ubuntu/link-proxy-target/release/deps/import_bench-0cbcb7db86502832)
+Gnuplot not found, using plotters backend
+Benchmarking import_csv/1000
+Benchmarking import_csv/1000: Warming up for 1.0000 s
+Benchmarking import_csv/1000: Collecting 20 samples in estimated 2.1706 s (1470 iterations)
+Benchmarking import_csv/1000: Analyzing
+import_csv/1000         time:   [1.3330 ms 1.4062 ms 1.4827 ms]
+                        thrpt:  [674.46 Kelem/s 711.16 Kelem/s 750.17 Kelem/s]
+                 change:
+                        time:   [+137.74% +149.31% +161.07%] (p = 0.00 < 0.05)
+                        thrpt:  [−61.697% −59.889% −57.938%]
+                        Performance has regressed.
+Benchmarking import_csv/10000
+Benchmarking import_csv/10000: Warming up for 1.0000 s
+Benchmarking import_csv/10000: Collecting 20 samples in estimated 2.1089 s (100 iterations)
+Benchmarking import_csv/10000: Analyzing
+import_csv/10000        time:   [15.727 ms 17.272 ms 19.469 ms]
+                        thrpt:  [513.62 Kelem/s 578.96 Kelem/s 635.86 Kelem/s]
+                 change:
+                        time:   [+148.89% +175.02% +212.09%] (p = 0.00 < 0.05)
+                        thrpt:  [−67.958% −63.639% −59.822%]
+                        Performance has regressed.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking import_csv/50000
+Benchmarking import_csv/50000: Warming up for 1.0000 s
+Benchmarking import_csv/50000: Collecting 20 samples in estimated 3.2968 s (40 iterations)
+Benchmarking import_csv/50000: Analyzing
+import_csv/50000        time:   [64.733 ms 66.575 ms 68.537 ms]
+                        thrpt:  [729.54 Kelem/s 751.04 Kelem/s 772.40 Kelem/s]
+                 change:
+                        time:   [+62.856% +67.765% +73.220%] (p = 0.00 < 0.05)
+                        thrpt:  [−42.270% −40.393% −38.596%]
+                        Performance has regressed.
+

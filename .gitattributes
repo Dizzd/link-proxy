@@ -1,0 +1,9 @@
+* text=auto eol=lf
+
+# SQLx verifies applied migration bytes. Never normalize existing migration files.
+migrations/** -text whitespace=cr-at-eol
+*.xlsx binary
+*.png binary
+
+# Preserve raw verification output, including terminal blank lines.
+docs/verification/*.log -whitespace

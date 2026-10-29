@@ -1,0 +1,52 @@
+   Compiling proxy-application v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-application)
+   Compiling proxy-admin-api v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-admin-api)
+   Compiling proxy-e2e v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-e2e)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.49s
+     Running unittests src/lib.rs (/home/ubuntu/link-proxy-target/debug/deps/proxy_e2e-77f93dcba066c054)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/conditional_routing.rs (/home/ubuntu/link-proxy-target/debug/deps/conditional_routing-b9ae67e7350520eb)
+
+running 1 test
+test device_boolean_time_and_query_share_production_evaluator ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/dynamic_reload.rs (/home/ubuntu/link-proxy-target/debug/deps/dynamic_reload-ff5ceb8367a0b595)
+
+running 1 test
+test publish_updates_without_restart_and_restore_creates_revision ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/import_workflow.rs (/home/ubuntu/link-proxy-target/debug/deps/import_workflow-1e7179b50729ed34)
+
+running 1 test
+test csv_xlsx_json_preview_explicit_commit_and_idempotency ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+
+     Running tests/redirect.rs (/home/ubuntu/link-proxy-target/debug/deps/redirect-683c3f746df80e06)
+
+running 1 test
+test static_redirect_authentication_hosts_and_methods ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/reverse_proxy.rs (/home/ubuntu/link-proxy-target/debug/deps/reverse_proxy-83f6ee0716ff5110)
+
+running 1 test
+test streaming_proxy_rewrite_host_and_forwarding_policy ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+   Doc-tests proxy_e2e
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+{"process_recovery": "passed", "committed_revision": 10, "real_pingora_http_tests": "passed"}

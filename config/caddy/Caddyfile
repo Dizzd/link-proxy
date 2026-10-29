@@ -1,0 +1,5 @@
+# PUBLIC_HOST=:80 serves HTTP. A DNS hostname enables automatic HTTPS.
+# Host is preserved for mapping evaluation. Admin is accessible only over the SSH tunnel.
+{$PUBLIC_HOST} {
+    reverse_proxy proxy:8080
+}

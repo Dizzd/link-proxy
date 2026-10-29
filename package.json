@@ -1,0 +1,13 @@
+{
+  "name": "dynamic-url-proxy-workspace",
+  "private": true,
+  "packageManager": "pnpm@10.28.2",
+  "scripts": {
+    "dev": "pnpm --dir apps/admin-web dev",
+    "build": "pnpm --dir apps/admin-web build",
+    "test": "pnpm --dir apps/admin-web test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1"
+  }
+}

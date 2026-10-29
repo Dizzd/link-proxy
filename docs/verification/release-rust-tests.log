@@ -1,0 +1,289 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.50s
+     Running unittests src/lib.rs (/home/ubuntu/link-proxy-target/debug/deps/proxy_admin_api-df211068dadfa767)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/api.rs (/home/ubuntu/link-proxy-target/debug/deps/api-49b25a9a6f51ceee)
+
+running 7 tests
+test ordinary_admin_body_limit_is_enforced ... ok
+test upload_capacity_is_reserved_before_multipart_file_buffering ... ok
+test administration_requires_authentication ... ok
+test audit_retains_authenticated_actor_and_edited_resource ... ok
+test templates_and_exports_are_authenticated_downloads ... ok
+test malformed_json_is_structured_and_readiness_checks_proxy_listener ... ok
+test mapping_crud_publish_simulate_and_revision_conflict ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+
+     Running tests/auth_sessions.rs (/home/ubuntu/link-proxy-target/debug/deps/auth_sessions-9f5741dcb0faf11e)
+
+running 8 tests
+test login_attempts_are_rate_limited ... ok
+test login_stores_argon2_password_and_session_hash_and_restores_session ... ok
+test secure_cookie_option_and_malformed_login_limits_are_enforced ... ok
+test csrf_origin_audit_actor_and_server_logout_are_enforced ... ok
+test invalid_credentials_are_generic_and_token_auth_is_disabled_when_unconfigured ... ok
+test sessions_and_users_survive_restart_and_bootstrap_never_overwrites ... ok
+test expired_sessions_disabled_users_and_cross_origin_login_are_rejected ... ok
+test password_change_revokes_all_sessions_and_old_password ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.46s
+
+     Running unittests src/lib.rs (/home/ubuntu/link-proxy-target/debug/deps/proxy_application-0e07ca2709cd19d0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cache.rs (/home/ubuntu/link-proxy-target/debug/deps/cache-702fabe09a122613)
+
+running 7 tests
+test real_redis_notifications_are_advisory_and_newer_cache_is_not_activated ... ignored, Requires disposable Redis: python3 scripts/redis_test.py
+test real_redis_versioned_cache_and_reconciliation ... ignored, Requires REDIS_TEST_URL and a running real Redis server
+test real_redis_z_failure_retains_live_snapshot ... ignored, Shuts down disposable Redis; run only through scripts/redis_test.py
+test memory_cache_is_distinct_from_active_snapshot ... ok
+test cache_envelope_rejects_stale_revision_and_tampering ... ok
+test memory_mode_ignores_enabled_redis_and_invalid_environment ... ok
+test redis_unavailable_does_not_prevent_publish_or_requests ... ok
+
+test result: ok. 4 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/imports.rs (/home/ubuntu/link-proxy-target/debug/deps/imports-a4516f77765a3a29)
+
+running 13 tests
+test file_structure_size_and_json_depth_are_bounded ... ok
+test formula_injection_is_escaped ... ok
+test import_large_10000_and_50000_records ... ignored, Explicit scale validation: cargo test -p proxy-application --test imports import_large -- --ignored --nocapture
+test duplicates_within_one_file_are_rejected ... ok
+test duplicate_policies_and_complete_rule_replacement ... ok
+test csv_basic_headers_rows_and_encoding ... ok
+test all_formats_round_trip_nested_rules ... ok
+test cancellation_removes_staging_without_mutation ... ok
+test concurrent_draft_change_prevents_staged_import_activation ... ok
+test dry_run_staging_commit_idempotency_and_rollback ... ok
+test invalid_destination_and_hostname_never_activate ... ok
+test restart_loads_committed_database_revision ... ok
+test import_one_thousand_records_publishes_once ... ok
+
+test result: ok. 12 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.50s
+
+     Running tests/postgres.rs (/home/ubuntu/link-proxy-target/debug/deps/postgres-ef8f45f6e09319e2)
+
+running 1 test
+test postgres_migrations_crud_import_revision_recovery_and_concurrency ... ignored, requires a disposable PostgreSQL database; use scripts/postgres_test.py
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/home/ubuntu/link-proxy-target/debug/deps/proxy_cache-a16114e6605cce6b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/home/ubuntu/link-proxy-target/debug/deps/proxy_domain-968d03a578987650)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/home/ubuntu/link-proxy-target/debug/deps/proxy_e2e-7ee7553d7293c1d2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/conditional_routing.rs (/home/ubuntu/link-proxy-target/debug/deps/conditional_routing-2e585a6b025419aa)
+
+running 1 test
+test device_boolean_time_and_query_share_production_evaluator ... ignored, Requires real Pingora: python3 scripts/e2e.py
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/dynamic_reload.rs (/home/ubuntu/link-proxy-target/debug/deps/dynamic_reload-353a1f0ae5ee4b35)
+
+running 1 test
+test publish_updates_without_restart_and_restore_creates_revision ... ignored, Requires real Pingora: python3 scripts/e2e.py
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/import_workflow.rs (/home/ubuntu/link-proxy-target/debug/deps/import_workflow-f4f4163443bfefa7)
+
+running 1 test
+test csv_xlsx_json_preview_explicit_commit_and_idempotency ... ignored, Requires real API and proxy: python3 scripts/e2e.py
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/redirect.rs (/home/ubuntu/link-proxy-target/debug/deps/redirect-2a291081983e92e9)
+
+running 1 test
+test static_redirect_authentication_hosts_and_methods ... ignored, Requires real Pingora and Axum listeners: python3 scripts/e2e.py
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/reverse_proxy.rs (/home/ubuntu/link-proxy-target/debug/deps/reverse_proxy-64dc352cab9923f6)
+
+running 1 test
+test streaming_proxy_rewrite_host_and_forwarding_policy ... ignored, Requires real Pingora and echo upstream: python3 scripts/e2e.py
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/home/ubuntu/link-proxy-target/debug/deps/proxy_import-d236e98c2e0ea240)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/import_test.rs (/home/ubuntu/link-proxy-target/debug/deps/import_test-18e20454920349b0)
+
+running 2 tests
+test semantic_errors_identify_each_invalid_import_record ... ok
+test xlsx_preserves_dependencies_and_negative_rule_priority ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running unittests src/lib.rs (/home/ubuntu/link-proxy-target/debug/deps/proxy_observability-af629760e001853a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/home/ubuntu/link-proxy-target/debug/deps/proxy_pingora-86018ed23fd52ddd)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/home/ubuntu/link-proxy-target/debug/deps/proxy_routing-b9de5a5c571f7640)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/conditions_test.rs (/home/ubuntu/link-proxy-target/debug/deps/conditions_test-98d2a6d206d90c2c)
+
+running 1 test
+test overnight_uses_previous_calendar_date_across_spring_dst ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/matching_test.rs (/home/ubuntu/link-proxy-target/debug/deps/matching_test-17d52f7349da9924)
+
+running 1 test
+test method_mismatch_has_path_without_selecting_action ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/routing.rs (/home/ubuntu/link-proxy-target/debug/deps/routing-f59a5349c34c025b)
+
+running 19 tests
+test clock_abstraction_is_deterministic ... ok
+test device_types_include_unknown_and_bot ... ok
+test date_range_includes_both_local_dates ... ok
+test boolean_nested_conditions_and_decoded_query ... ok
+test direct_redirect_loop_is_rejected ... ok
+test equal_enabled_rule_priorities_rejected ... ok
+test ambiguous_same_priority_routes_are_rejected ... ok
+test exact_paths_share_a_destination ... ok
+test disabled_mapping_and_domain_do_not_route ... ok
+test enabled_rules_use_priority_then_default ... ok
+test malicious_conditions_and_destinations_are_rejected ... ok
+test methods_and_priority_are_deterministic ... ok
+test overnight_weekday_is_window_start_day ... ok
+test proxy_reference_and_rewrite_are_validated ... ok
+test redirect_query_policies_and_append ... ok
+test specificity_precedes_mapping_priority ... ok
+test template_equivalent_patterns_are_rejected ... ok
+test timezone_start_inclusive_end_exclusive ... ok
+test template_mapping_key_index_selects_correct_mapping ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+
+     Running tests/snapshot_test.rs (/home/ubuntu/link-proxy-target/debug/deps/snapshot_test-07dc519643e3413a)
+
+running 1 test
+test old_snapshot_is_immutable_when_a_new_configuration_is_compiled ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/home/ubuntu/link-proxy-target/debug/deps/proxy_server-1707c368fa087805)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/home/ubuntu/link-proxy-target/debug/deps/proxy_storage-16e5c502fc2bf01e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/sqlite_upgrade.rs (/home/ubuntu/link-proxy-target/debug/deps/sqlite_upgrade-7304791e4744e2d3)
+
+running 1 test
+test additive_auth_migration_preserves_existing_sqlite_configuration ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+   Doc-tests proxy_admin_api
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests proxy_application
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests proxy_cache
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests proxy_domain
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests proxy_e2e
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests proxy_import
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests proxy_observability
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests proxy_pingora
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests proxy_routing
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests proxy_storage
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

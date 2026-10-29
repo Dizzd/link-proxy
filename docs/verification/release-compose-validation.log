@@ -1,0 +1,10 @@
+Release image deployment:
+Compose profile validation passed: SQLite only
+Compose profile validation passed: caddy
+Compose profile validation passed: postgres,caddy
+Compose profile validation passed: postgres,caddy,redis
+Source-build deployment:
+Compose profile validation passed: SQLite only
+Compose profile validation passed: caddy
+Compose profile validation passed: postgres,caddy
+Compose profile validation passed: postgres,caddy,redis

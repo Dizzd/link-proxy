@@ -1,0 +1,29 @@
+   Compiling sqlx-core v0.8.6
+   Compiling chrono v0.4.45
+   Compiling sqlx-sqlite v0.8.6
+   Compiling sqlx-macros-core v0.8.6
+   Compiling sqlx-macros v0.8.6
+   Compiling proxy-domain v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-domain)
+warning: could not load dep-graph from `/home/ubuntu/link-proxy-target/debug/incremental/proxy_domain-08ksd7h1pha90/s-hnnorlwiw3-0516bgh-working/dep-graph.bin`: memory map must have a non-zero length
+
+   Compiling sqlx v0.8.6
+   Compiling redis v0.32.7
+warning: `proxy-domain` (lib) generated 1 warning
+   Compiling proxy-storage v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-storage)
+   Compiling chrono-tz v0.10.4
+   Compiling proxy-routing v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-routing)
+   Compiling proxy-cache v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-cache)
+   Compiling proxy-import v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-import)
+   Compiling proxy-application v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-application)
+   Compiling proxy-admin-api v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-admin-api)
+   Compiling dynamic-url-proxy v0.1.0 (/mnt/d/ETS/link-proxy)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 32.32s
+     Running tests/imports.rs (/home/ubuntu/link-proxy-target/debug/deps/imports-c187b7247ee8afd1)
+
+running 1 test
+10000 records staged and activated in 4.645334636s
+50000 records staged and activated in 22.385757377s
+test import_large_10000_and_50000_records ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 12 filtered out; finished in 27.57s
+

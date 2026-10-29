@@ -1,0 +1,22 @@
+[package]
+name = "proxy-cache"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+[dependencies]
+thiserror.workspace = true
+futures-util = "0.3"
+tracing.workspace = true
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+ipnet.workspace = true
+toml.workspace = true
+chrono.workspace = true
+proxy-domain.workspace = true
+proxy-storage.workspace = true
+proxy-observability.workspace = true
+redis = { workspace = true, optional = true }
+[features]
+redis-cache = ["dep:redis"]

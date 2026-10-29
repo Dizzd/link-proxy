@@ -1,0 +1,32 @@
+{
+  "domains": [],
+  "upstreams": [],
+  "mappings": [
+    {
+      "id": "example-001",
+      "mapping_key": "QR001",
+      "name": "Example mapping",
+      "description": "",
+      "enabled": true,
+      "priority": 0,
+      "source_matcher": {
+        "hosts": [
+          "abc.example.com"
+        ],
+        "path_type": "exact",
+        "path_value": "/QR001",
+        "methods": []
+      },
+      "default_action": {
+        "type": "redirect",
+        "status": 302,
+        "target_url": "https://example.org/",
+        "path_handling": "replace",
+        "query_policy": "drop"
+      },
+      "rules": [],
+      "created_at": "2026-10-29T07:40:51.749828298Z",
+      "updated_at": "2026-10-29T07:40:51.749830682Z"
+    }
+  ]
+}

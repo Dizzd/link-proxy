@@ -1,0 +1,34 @@
+[package]
+name = "proxy-admin-api"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+[dependencies]
+url.workspace = true
+thiserror.workspace = true
+argon2.workspace = true
+uuid.workspace = true
+rand_core = { version = "0.6", features = ["getrandom"] }
+proxy-storage.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+axum.workspace = true
+http.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+subtle.workspace = true
+csv.workspace = true
+chrono.workspace = true
+sqlx.workspace = true
+proxy-domain.workspace = true
+proxy-routing.workspace = true
+proxy-application.workspace = true
+proxy-import.workspace = true
+
+[dev-dependencies]
+tempfile = "3"
+tower.workspace = true
+http-body-util = "0.1"
+proxy-cache.workspace = true

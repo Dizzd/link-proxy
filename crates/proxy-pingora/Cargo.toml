@@ -1,0 +1,17 @@
+[package]
+name = "proxy-pingora"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+[dependencies]
+proxy-observability.workspace = true
+anyhow.workspace = true
+async-trait.workspace = true
+bytes.workspace = true
+tokio.workspace = true
+http.workspace = true
+tracing.workspace = true
+proxy-domain.workspace = true
+proxy-routing.workspace = true
+proxy-application.workspace = true
+pingora = { version = "0.9", features = ["proxy", "openssl"] }

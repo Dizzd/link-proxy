@@ -1,0 +1,91 @@
+name: Container release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: container-release-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  rust:
+    uses: ./.github/workflows/rust-ci.yml
+  frontend:
+    uses: ./.github/workflows/frontend-ci.yml
+  deployment:
+    uses: ./.github/workflows/deployment-ci.yml
+  publish:
+    needs: [rust, frontend, deployment]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate release metadata
+        id: image
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "$RELEASE_TAG" =~ ^[a-zA-Z0-9_][a-zA-Z0-9_.-]{0,127}$ ]]; then
+            echo 'Release tag must be a valid Docker image tag' >&2
+            exit 1
+          fi
+          image="ghcr.io/${GITHUB_REPOSITORY,,}"
+          printf 'name=%s\ntag=%s\n' "$image" "$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build release image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          platforms: linux/amd64
+          load: true
+          tags: ${{ steps.image.outputs.name }}:${{ steps.image.outputs.tag }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ steps.image.outputs.tag }}
+          cache-from: type=gha,scope=release-amd64
+          cache-to: type=gha,mode=max,scope=release-amd64
+      - name: Smoke-test the exact image before publishing
+        env:
+          IMAGE: ${{ steps.image.outputs.name }}:${{ steps.image.outputs.tag }}
+        run: python3 scripts/image_smoke_test.py "$IMAGE"
+      - name: Push tested image and package pinned deployment files
+        env:
+          IMAGE: ${{ steps.image.outputs.name }}:${{ steps.image.outputs.tag }}
+          RELEASE_TAG: ${{ steps.image.outputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker push "$IMAGE"
+          pinned=$(docker image inspect --format '{{index .RepoDigests 0}}' "$IMAGE")
+          python3 scripts/package_release.py --repository "$GITHUB_REPOSITORY" \
+            --version "$RELEASE_TAG" --image "$pinned" --output release-assets
+      - name: Validate deployment combinations
+        run: python3 scripts/validate_release.py release-assets
+      - name: Upload release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ steps.image.outputs.tag }}
+        run: |
+          gh release upload "$RELEASE_TAG" release-assets/* release-assets/.env.example --clobber
+      - name: Deployment summary
+        env:
+          IMAGE: ${{ steps.image.outputs.name }}:${{ steps.image.outputs.tag }}
+        run: |
+          printf 'Published `%s` (linux/amd64). Download `dynamic-url-proxy-deploy.tar.gz` from this release.\n' "$IMAGE" >> "$GITHUB_STEP_SUMMARY"

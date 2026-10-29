@@ -1,0 +1,18 @@
+[package]
+name = "proxy-server"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+[dependencies]
+anyhow.workspace = true
+tokio.workspace = true
+axum.workspace = true
+tracing.workspace = true
+proxy-application.workspace = true
+proxy-admin-api.workspace = true
+proxy-cache = { workspace = true, features = ["redis-cache"] }
+proxy-observability.workspace = true
+proxy-pingora.workspace = true
+pingora = { version = "0.9", features = ["proxy", "openssl"] }
+
+tower-http = { version = "0.6", features = ["fs"] }

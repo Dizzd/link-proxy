@@ -1,0 +1,5 @@
+   Compiling proxy-application v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-application)
+   Compiling proxy-admin-api v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-admin-api)
+   Compiling proxy-pingora v0.1.0 (/mnt/d/ETS/link-proxy/crates/proxy-pingora)
+   Compiling proxy-server v0.1.0 (/mnt/d/ETS/link-proxy/apps/proxy-server)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 19.56s

@@ -1,0 +1,28 @@
+[package]
+name = "proxy-application"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+[dependencies]
+tracing.workspace = true
+anyhow.workspace = true
+arc-swap.workspace = true
+tokio.workspace = true
+sqlx.workspace = true
+serde_json.workspace = true
+chrono.workspace = true
+proxy-domain.workspace = true
+proxy-routing.workspace = true
+proxy-storage.workspace = true
+proxy-cache.workspace = true
+proxy-observability.workspace = true
+proxy-import.workspace = true
+
+[features]
+default = []
+redis-cache = ["proxy-cache/redis-cache"]
+
+[dev-dependencies]
+redis.workspace = true
+uuid.workspace = true
+tempfile = "3"

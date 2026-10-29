@@ -1,0 +1,14 @@
+[package]
+name = "proxy-e2e"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+[dependencies]
+anyhow.workspace = true
+tokio.workspace = true
+serde_json.workspace = true
+proxy-application.workspace = true
+proxy-domain.workspace = true
+proxy-admin-api.workspace = true
+[dev-dependencies]
+reqwest = { version = "0.12", default-features = false, features = ["json", "multipart"] }

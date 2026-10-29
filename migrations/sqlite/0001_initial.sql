@@ -1,0 +1,54 @@
+PRAGMA foreign_keys = ON;
+CREATE TABLE IF NOT EXISTS domains (
+    id TEXT PRIMARY KEY, hostname TEXT NOT NULL UNIQUE COLLATE NOCASE, enabled INTEGER NOT NULL,
+    data TEXT NOT NULL CHECK(json_valid(data))
+);
+CREATE TABLE IF NOT EXISTS upstreams (
+    id TEXT PRIMARY KEY, name TEXT NOT NULL UNIQUE, data TEXT NOT NULL CHECK(json_valid(data))
+);
+CREATE TABLE IF NOT EXISTS mappings (
+    id TEXT PRIMARY KEY, mapping_key TEXT NOT NULL UNIQUE, enabled INTEGER NOT NULL,
+    priority INTEGER NOT NULL, data TEXT NOT NULL CHECK(json_valid(data))
+);
+CREATE TABLE IF NOT EXISTS mapping_hosts (
+    mapping_id TEXT NOT NULL REFERENCES mappings(id) ON DELETE CASCADE, hostname TEXT NOT NULL,
+    PRIMARY KEY(mapping_id,hostname)
+);
+CREATE INDEX IF NOT EXISTS idx_mapping_hosts_hostname ON mapping_hosts(hostname);
+CREATE INDEX IF NOT EXISTS idx_mappings_enabled_priority ON mappings(enabled,priority DESC);
+CREATE TABLE IF NOT EXISTS mapping_rules (
+    id TEXT PRIMARY KEY, mapping_id TEXT NOT NULL REFERENCES mappings(id) ON DELETE CASCADE,
+    priority INTEGER NOT NULL, enabled INTEGER NOT NULL, condition_schema_version INTEGER NOT NULL DEFAULT 1,
+    data TEXT NOT NULL CHECK(json_valid(data))
+);
+CREATE INDEX IF NOT EXISTS idx_mapping_rules_mapping ON mapping_rules(mapping_id,priority DESC);
+CREATE TABLE IF NOT EXISTS config_revisions (
+    version INTEGER PRIMARY KEY AUTOINCREMENT, status TEXT NOT NULL CHECK(status IN ('committed','active','superseded')),
+    checksum TEXT NOT NULL, data TEXT NOT NULL CHECK(json_valid(data)), created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS control_state (
+    id INTEGER PRIMARY KEY CHECK(id=1), active_revision INTEGER NOT NULL DEFAULT 0, draft_generation INTEGER NOT NULL DEFAULT 0
+);
+INSERT OR IGNORE INTO control_state(id) VALUES(1);
+CREATE TABLE IF NOT EXISTS audit_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, operation TEXT NOT NULL, revision INTEGER NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS import_jobs (
+    id TEXT PRIMARY KEY, file_name TEXT NOT NULL, format TEXT NOT NULL, conflict_policy TEXT NOT NULL,
+    status TEXT NOT NULL CHECK(status IN ('pending','validating','ready','committing','completed','failed','cancelled')),
+    base_revision INTEGER NOT NULL, base_generation INTEGER NOT NULL, total_records INTEGER NOT NULL DEFAULT 0,
+    valid_records INTEGER NOT NULL DEFAULT 0, error_count INTEGER NOT NULL DEFAULT 0,
+    result TEXT, idempotency_key TEXT UNIQUE, committed_revision INTEGER,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_import_jobs_status_created ON import_jobs(status,created_at);
+CREATE TABLE IF NOT EXISTS import_job_errors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, job_id TEXT NOT NULL REFERENCES import_jobs(id) ON DELETE CASCADE,
+    location TEXT NOT NULL, field TEXT NOT NULL, code TEXT NOT NULL, description TEXT NOT NULL, suggestion TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_import_errors_job ON import_job_errors(job_id,id);
+CREATE TABLE IF NOT EXISTS import_staging_records (
+    job_id TEXT NOT NULL REFERENCES import_jobs(id) ON DELETE CASCADE, ordinal INTEGER NOT NULL,
+    external_id TEXT NOT NULL, data TEXT NOT NULL CHECK(json_valid(data)), PRIMARY KEY(job_id,ordinal), UNIQUE(job_id,external_id)
+);

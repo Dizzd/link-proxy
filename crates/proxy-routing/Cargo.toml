@@ -1,0 +1,21 @@
+[package]
+name = "proxy-routing"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+[dependencies]
+thiserror.workspace = true
+proxy-domain.workspace = true
+anyhow.workspace = true
+http.workspace = true
+chrono.workspace = true
+chrono-tz.workspace = true
+url.workspace = true
+matchit.workspace = true
+
+[dev-dependencies]
+criterion = "0.7"
+serde_json.workspace = true
+[[bench]]
+name = "routing_bench"
+harness = false
