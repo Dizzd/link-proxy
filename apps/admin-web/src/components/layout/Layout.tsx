@@ -1,16 +1,64 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { useState } from "react";
 import { CacheStatusBadge } from "./CacheStatusBadge";
-const links = [
-  ["/", "Overview"],
-  ["/mappings", "Mappings"],
-  ["/upstreams", "Upstreams"],
-  ["/domains", "Domains"],
-  ["/imports", "Bulk import"],
-  ["/exports", "Bulk export"],
-  ["/revisions", "Revisions"],
-  ["/monitoring", "Monitoring"],
-  ["/settings", "Settings"],
+export const navigationGroups = [
+  {
+    label: "Routing",
+    links: [
+      ["/mappings", "Mappings"],
+      ["/upstreams", "Upstreams"],
+      ["/domains", "Domains"],
+    ],
+  },
+  {
+    label: "Data management",
+    links: [
+      ["/imports", "Bulk import"],
+      ["/exports", "Bulk export"],
+      ["/revisions", "Revisions"],
+    ],
+  },
+  {
+    label: "Operations",
+    links: [
+      ["/monitoring", "Monitoring"],
+      ["/settings", "Settings"],
+    ],
+  },
 ];
+function NavigationGroup({ label, links }: (typeof navigationGroups)[number]) {
+  const { pathname } = useLocation();
+  const active = links.some(
+    ([path]) => pathname === path || pathname.startsWith(`${path}/`),
+  );
+  const [expanded, setExpanded] = useState(true);
+  const id = `nav-${label.toLowerCase().replaceAll(" ", "-")}`;
+  return (
+    <section className="nav-group" aria-label={label}>
+      <button
+        className="nav-group-toggle"
+        aria-expanded={expanded}
+        aria-controls={id}
+        onClick={() => setExpanded(!expanded)}
+      >
+        <span>
+          {label}
+          {!expanded && active && (
+            <span className="nav-current"> · Current</span>
+          )}
+        </span>
+        <span aria-hidden="true">{expanded ? "−" : "+"}</span>
+      </button>
+      <div id={id} className="nav-group-links" hidden={!expanded}>
+        {links.map(([path, title]) => (
+          <NavLink key={path} to={path}>
+            {title}
+          </NavLink>
+        ))}
+      </div>
+    </section>
+  );
+}
 export function Layout({
   logout,
   username,
@@ -35,10 +83,11 @@ export function Layout({
           </div>
         </div>
         <nav aria-label="Main navigation">
-          {links.map(([path, label]) => (
-            <NavLink key={path} end={path === "/"} to={path}>
-              {label}
-            </NavLink>
+          <NavLink end to="/">
+            Overview
+          </NavLink>
+          {navigationGroups.map((group) => (
+            <NavigationGroup key={group.label} {...group} />
           ))}
         </nav>
         <div className="sidebar-foot">

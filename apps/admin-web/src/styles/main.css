@@ -466,3 +466,127 @@ legend {
     transition: none !important;
   }
 }
+
+/* Grouped navigation and live monitoring */
+.nav-group {
+  border-top: 1px solid #2d405c;
+  margin-top: 10px;
+  padding-top: 6px;
+}
+.nav-group-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 15px;
+  background: transparent;
+  color: #a3b6d3;
+  font-size: 12px;
+  text-align: left;
+}
+.nav-group-toggle:hover {
+  background: #1b304f;
+}
+.nav-current {
+  color: #dbe5f5;
+}
+.nav-group-links:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.nav-group-links a {
+  padding: 9px 15px 9px 24px;
+  min-height: 44px;
+}
+.monitor-status,
+.chart-caption {
+  color: var(--muted);
+  font-size: 13px;
+}
+.monitor-charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.monitor-charts .panel {
+  margin: 0;
+  min-width: 0;
+}
+.trend-chart {
+  width: 100%;
+  display: block;
+  color: var(--primary);
+}
+.trend-latency {
+  color: #0f766e;
+}
+.trend-chart text {
+  fill: var(--muted);
+  font-size: 11px;
+}
+.chart-grid {
+  stroke: var(--border);
+  stroke-dasharray: 4 4;
+}
+.chart-empty {
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--muted);
+  background: #f8fafc;
+  border-radius: 7px;
+  padding: 20px;
+}
+.metric-breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.metric-breakdown dt {
+  color: var(--muted);
+  font-size: 14px;
+}
+.metric-breakdown dd {
+  margin: 6px 0 0;
+  font-size: 26px;
+}
+.panel summary {
+  cursor: pointer;
+  font-weight: 500;
+  min-height: 44px;
+  display: list-item;
+  align-content: center;
+}
+.panel[open] summary {
+  margin-bottom: 16px;
+}
+.stat strong {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 1000px) {
+  .monitor-charts {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 700px) {
+  nav {
+    flex-direction: column;
+    overflow: visible;
+  }
+  .nav-group {
+    margin-top: 3px;
+    padding-top: 3px;
+  }
+  .nav-group-links:not([hidden]) {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .nav-group-links a {
+    padding: 9px 15px;
+  }
+  .metric-breakdown {
+    grid-template-columns: 1fr;
+  }
+}
