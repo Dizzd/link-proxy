@@ -4,7 +4,7 @@ Dynamic URL mapping and conditional routing with a Pingora data plane, Axum mana
 
 ## v0.3.1 pre-release
 
-**Validation:** local Linux Rust checks, 62 workspace tests, 22 frontend tests and the actual HTTP/process-recovery harness passed for the bulk import fix. See [verification evidence](docs/verification/bulk-import-id.md). Container build, full-stack smoke and asset publication are gated by the release workflow; check its result before deploying.
+**Verified build:** [v0.3.1 release workflow](https://github.com/Dizzd/link-proxy/actions/runs/41032028403) passed Rust/frontend/deployment checks, image build, full-stack container smoke, GHCR push and upload of all eight assets. The downloaded bundle matched all seven checksums and six archive members. See [verification evidence](docs/verification/release-v0.3.1.md).
 
 An early release for evaluation and controlled deployments. The application image currently supports **linux/amd64**. Deployment assets are attached to the [v0.3.1 pre-release](https://github.com/Dizzd/link-proxy/releases/tag/v0.3.1) only after its [Container release workflow](https://github.com/Dizzd/link-proxy/actions/workflows/release.yml) succeeds. A published release page alone does not mean the image/bundle is ready.
 

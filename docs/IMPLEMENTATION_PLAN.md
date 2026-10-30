@@ -190,3 +190,9 @@ Evidence: [bulk-import-id.md](verification/bulk-import-id.md) and bulk-import-id
 ## v0.3.1 pre-release preparation
 
 Include the optional bulk-import mapping ID fix and verification-artifact ignore rules. Bump workspace packages and Cargo.lock to 0.3.1 without upgrading dependencies; update current release instructions. Three release-packaging tests passed locally. The bulk-import validation evidence above covers the functional fix. Hosted tag validation, image build, full-stack smoke, GHCR publication and deployment asset download verification remain pending until the release workflow executes successfully. Keep this release marked as a pre-release, not Latest.
+
+### v0.3.1 publication verified
+
+Published https://github.com/Dizzd/link-proxy/releases/tag/v0.3.1 as a pre-release, not Latest, from 71bf8c53e41cef3b72168bbe38fc854e6ffeebde. Workflow https://github.com/Dizzd/link-proxy/actions/runs/41032028403 passed all four jobs, including real Rust HTTP/PostgreSQL/configuration tests, frontend/deployment validation, image build, PostgreSQL/proxy/Caddy/Redis smoke, GHCR push and all eight asset uploads.
+
+Downloaded and verified all seven checksums and all six archive members. The published image digest matches release.json and the environment example: ghcr.io/dizzd/link-proxy@sha256:20df0b24f96c5d3b9ed67b394daa83ccad3991b35e1d2021b5923317233fc9bb (linux/amd64). Evidence: [release-v0.3.1.md](verification/release-v0.3.1.md). Raw logs and downloads remain local under the updated ignore policy. Production deployment and production benchmarks are not claimed.
