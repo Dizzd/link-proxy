@@ -10,12 +10,10 @@ pub(crate) fn parse_format(
     std::str::from_utf8(bytes).context("CSV must be UTF-8")?;
     let mut reader = csv::ReaderBuilder::new().from_reader(bytes);
     let headers = reader.headers()?.clone();
-    for required in ["external_id", "mapping_key"] {
-        ensure!(
-            headers.iter().any(|h| h == required),
-            "missing header: {required}"
-        );
-    }
+    ensure!(
+        headers.iter().any(|h| h == "mapping_key"),
+        "missing header: mapping_key"
+    );
     for (i, row) in reader.records().enumerate() {
         ensure!(
             i < limits.max_records,

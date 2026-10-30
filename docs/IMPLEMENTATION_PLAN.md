@@ -178,3 +178,15 @@ Release scope: grouped/collapsible sidebar navigation, visual Monitoring charts 
 Published https://github.com/Dizzd/link-proxy/releases/tag/v0.3.0 as a pre-release, not Latest, from commit 280940bd112a2646af5b26315934ff26d8b3e41f. Container release run https://github.com/Dizzd/link-proxy/actions/runs/41023415399 completed successfully: Rust/frontend/deployment validation, linux/amd64 image build, actual PostgreSQL/proxy/Caddy/Redis smoke test, GHCR push, Compose validation and upload of all eight assets.
 
 Image ghcr.io/dizzd/link-proxy:v0.3.0 has manifest digest sha256:581fcacc6128774450d2fd80adc9dbece61d3002a3ee263486f066e32466021e. Downloaded all actual release assets via authenticated GitHub access: all seven SHA256SUMS entries and six archive members matched; release.json and the environment example pin that image digest. Evidence is in docs/verification/release-v0.3.0-assets.log, release-v0.3.0-hosted.log and release-v0.3.0-workflow.json. The image targets linux/amd64; production deployment/benchmarks are not claimed. This documentation update does not retarget the published tag or modify existing releases.
+
+## Optional mapping IDs in bulk import
+
+- [x] Allow missing/empty external_id for CSV/XLSX mappings, generating UUIDs for new flat rows while preserving explicit IDs and existing mapping_json identities. Keep Rules references and key-conflict policies explicit.
+- [x] Verify generated IDs persist through staging, explicit commit and idempotent retry; a new upload with an existing key cannot silently overwrite the mapping.
+- [x] Execute Linux fmt/check/workspace all-feature tests/Clippy/server build and the real HTTP/recovery/shutdown harness; execute frontend build and tests. Workspace: 62 passed, 10 ignored; frontend: 22 passed. The HTTP harness explicitly executed its five ignored tests. Other ignored external/scale tests were not run for this fix.
+
+Evidence: [bulk-import-id.md](verification/bulk-import-id.md) and bulk-import-id-*.log. Parsing the original template.xlsx generated all seven IDs and exposed six missing-host errors (Mappings rows 3-8); the workbook was preserved. Deployment and production benchmarks are not claimed.
+
+## v0.3.1 pre-release preparation
+
+Include the optional bulk-import mapping ID fix and verification-artifact ignore rules. Bump workspace packages and Cargo.lock to 0.3.1 without upgrading dependencies; update current release instructions. Three release-packaging tests passed locally. The bulk-import validation evidence above covers the functional fix. Hosted tag validation, image build, full-stack smoke, GHCR publication and deployment asset download verification remain pending until the release workflow executes successfully. Keep this release marked as a pre-release, not Latest.

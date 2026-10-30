@@ -2,15 +2,15 @@
 
 Dynamic URL mapping and conditional routing with a Pingora data plane, Axum management API and React administration dashboard. A QR identifier is an ordinary Mapping key; all matching, conditions and destination actions use the same domain.
 
-## v0.3.0 pre-release
+## v0.3.1 pre-release
 
-**Verified build:** [v0.3.0 release workflow](https://github.com/Dizzd/link-proxy/actions/runs/41023415399) passed image build, full-stack container smoke, GHCR push and upload of all eight assets. The downloaded bundle matched all seven checksums and six archive members.
+**Validation:** local Linux Rust checks, 62 workspace tests, 22 frontend tests and the actual HTTP/process-recovery harness passed for the bulk import fix. See [verification evidence](docs/verification/bulk-import-id.md). Container build, full-stack smoke and asset publication are gated by the release workflow; check its result before deploying.
 
-An early release for evaluation and controlled deployments. The application image currently supports **linux/amd64**. Deployment assets are attached to the [v0.3.0 pre-release](https://github.com/Dizzd/link-proxy/releases/tag/v0.3.0) only after its [Container release workflow](https://github.com/Dizzd/link-proxy/actions/workflows/release.yml) succeeds. A published release page alone does not mean the image/bundle is ready.
+An early release for evaluation and controlled deployments. The application image currently supports **linux/amd64**. Deployment assets are attached to the [v0.3.1 pre-release](https://github.com/Dizzd/link-proxy/releases/tag/v0.3.1) only after its [Container release workflow](https://github.com/Dizzd/link-proxy/actions/workflows/release.yml) succeeds. A published release page alone does not mean the image/bundle is ready.
 
-**New in v0.3.0:** grouped, collapsible sidebar navigation; a visual Monitoring dashboard with request-rate and response-time charts, summary cards, import totals and pause/resume controls; and live configuration-cache mode/Redis status. Monitoring keeps up to 60 in-page samples collected while the page is open. Runtime deployments retain one config.toml and CACHE_MODE from v0.2.0.
+**Fixed in v0.3.1:** CSV/XLSX bulk imports generate UUIDs when external_id is empty or omitted. Explicit IDs and IDs embedded in mapping_json are preserved. Generated IDs remain stable through preview and idempotent commit retries. Existing mapping_key conflicts still require the correct stable ID for updates. Each row must provide its own source_host; blank cells do not inherit previous rows. Runtime deployments retain one config.toml and CACHE_MODE from v0.2.0.
 
-**Upgrading from v0.1.0:** preserve your effective TOML content as config.toml, including allowlists/authentication and Redis tuning. Replace the old file-selection variable with CACHE_MODE and use the v0.3.0 image and Compose together. Retain the original database URL, Compose project name and volumes. The v0.1.0 image ignores CACHE_MODE; its published artifacts remain unchanged. See the bundle README for migration instructions.
+**Upgrading from v0.1.0:** preserve your effective TOML content as config.toml, including allowlists/authentication and Redis tuning. Replace the old file-selection variable with CACHE_MODE and use the v0.3.1 image and Compose together. Retain the original database URL, Compose project name and volumes. The v0.1.0 image ignores CACHE_MODE; its published artifacts remain unchanged. See the bundle README for migration instructions.
 
 New release bundles contain dynamic-url-proxy-deploy.tar.gz, a single docker-compose.yml, .env.example, Caddyfile, config.toml, release metadata and SHA256SUMS. The bundle pins the exact GHCR image digest; no source build, Rust or Node is required on the deployment server.
 
@@ -33,7 +33,7 @@ Normal routing requests read only the immutable in-memory snapshot; they never q
 
 The Container release GitHub Action runs when a GitHub Release is published. It gates on Rust, frontend and deployment checks, builds the linux/amd64 image, smoke-tests PostgreSQL + proxy + Caddy + Redis, pushes the tested image to ghcr.io/dizzd/link-proxy:RELEASE_TAG and uploads an immutable-digest deployment bundle to that release. Release credentials use GITHUB_TOKEN; administrator/database passwords are set only on your server.
 
-Download the runtime bundle and SHA256SUMS from [v0.3.0 Assets](https://github.com/Dizzd/link-proxy/releases/tag/v0.3.0) after the Container release workflow succeeds. This repository is private: use an authenticated browser or GitHub CLI to download the files. You can download on your workstation and upload the archive/checksums to the server; the server itself needs only Docker Engine and Docker Compose >= 2.20.0.
+Download the runtime bundle and SHA256SUMS from [v0.3.1 Assets](https://github.com/Dizzd/link-proxy/releases/tag/v0.3.1) after the Container release workflow succeeds. This repository is private: use an authenticated browser or GitHub CLI to download the files. You can download on your workstation and upload the archive/checksums to the server; the server itself needs only Docker Engine and Docker Compose >= 2.20.0.
 
 Use the archive to preserve all file names and relative mounts. GitHub lists the standalone environment asset as default.env.example; inside the archive it is .env.example as used below.
 
@@ -44,7 +44,7 @@ mkdir -p ~/link-proxy
 cd ~/link-proxy
 # GitHub CLI is only needed on the machine downloading the private assets.
 gh auth login
-gh release download v0.3.0 --repo Dizzd/link-proxy \
+gh release download v0.3.1 --repo Dizzd/link-proxy \
   --pattern dynamic-url-proxy-deploy.tar.gz --pattern SHA256SUMS
 tar -xzf dynamic-url-proxy-deploy.tar.gz
 sha256sum -c SHA256SUMS
@@ -62,9 +62,9 @@ docker compose ps
 
 The image targets **linux/amd64**. The package owner can make GHCR public for anonymous image pulls; publishing a release does not change visibility. Private packages require a user/token authorized to read that package; registry credentials are separate from the application's administrator account. Do not copy GitHub tokens into .env.
 
-Pre-releases are not resolved by GitHub's releases/latest download URL. Always select the v0.3.0 tag explicitly. If the repository is made public, its direct archive URL is https://github.com/Dizzd/link-proxy/releases/download/v0.3.0/dynamic-url-proxy-deploy.tar.gz.
+Pre-releases are not resolved by GitHub's releases/latest download URL. Always select the v0.3.1 tag explicitly. If the repository is made public, its direct archive URL is https://github.com/Dizzd/link-proxy/releases/download/v0.3.1/dynamic-url-proxy-deploy.tar.gz.
 
-Set these environment values before startup for v0.3.0 (use the bundled README for older releases):
+Set these environment values before startup for v0.3.1 (use the bundled README for older releases):
 
 | Variable | Purpose |
 |---|---|
@@ -204,7 +204,7 @@ Maintainers can retry an existing release from its exact tag:
 
 ```bash
 gh workflow run release.yml --repo Dizzd/link-proxy \
-  --ref v0.3.0 --field release_tag=v0.3.0
+  --ref v0.3.1 --field release_tag=v0.3.1
 ```
 
 The workflow requires its Git ref and release_tag to match, so the validation jobs and image build use the same source commit. It refuses branch-based builds for a release tag. Debian's built-in proxy system user is preserved; the application image runs under its own urlproxy account (UID 10001).

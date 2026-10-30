@@ -92,12 +92,10 @@ pub(crate) fn parse_format(
         .iter()
         .map(ToString::to_string)
         .collect();
-    for required in ["external_id", "mapping_key"] {
-        ensure!(
-            headers.iter().any(|h| h == required),
-            "missing header: {required}"
-        );
-    }
+    ensure!(
+        headers.iter().any(|h| h == "mapping_key"),
+        "missing header: mapping_key"
+    );
     for (i, row) in rows.enumerate() {
         let values: HashMap<&str, String> = headers
             .iter()

@@ -13,22 +13,9 @@ dist/
 test-results/
 playwright-report/
 
-# Keep executed verification evidence reviewable.
-!/docs/verification/cargo-*.log
-!/docs/verification/frontend-build.log
-!/docs/verification/frontend-test.log
-!/docs/verification/http-e2e.log
-!/docs/verification/redis-tests.log
-!/docs/verification/scale-imports.log
-!/docs/verification/*benchmark*.log
-!/docs/verification/browser-e2e.log
-/docs/verification/*.pid
-/docs/verification/browser-config.toml
-!/docs/verification/cleanup-*.log
-!/docs/verification/password-*.log
-!/docs/verification/postgres-*.log
-!/docs/verification/portable-*.log
-/docs/verification/browser-*/
-!/docs/verification/release-*.log
+# Keep verification summaries; ignore raw evidence and temporary artifacts.
+/docs/verification/**
+!/docs/verification/**/
+!/docs/verification/**/*.md
 /release-assets/
 /release-validation/

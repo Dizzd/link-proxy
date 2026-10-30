@@ -204,6 +204,46 @@ async fn dry_run_staging_commit_idempotency_and_rollback() {
     );
 }
 #[tokio::test]
+async fn generated_import_id_survives_staging_commit_and_retry() {
+    let control = control().await;
+    let id = control
+        .submit_import(
+            "new.csv".into(),
+            Format::Csv,
+            ConflictPolicy::Reject,
+            b"mapping_key,source_host,source_path,default_target_url\nQR1,example.com,/QR1,https://target.example/\n".to_vec(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(ready(&control, &id).await.status, "ready");
+    let staged = control.staged_document(&id).await.unwrap();
+    let mapping_id = &staged.mappings[0].id;
+    assert!(!mapping_id.is_empty());
+    assert!(control.store.draft().await.unwrap().mappings.is_empty());
+    assert_eq!(control.active.load().revision, 0);
+    for _ in 0..2 {
+        let result = control
+            .commit_import(&id, 0, ConflictPolicy::Reject, true, "generated-id")
+            .await
+            .unwrap();
+        assert_eq!(result.revision, Some(1));
+        assert_eq!(&control.active.load().mappings[0].mapping.id, mapping_id);
+        assert_eq!(control.store.draft().await.unwrap().mappings.len(), 1);
+    }
+    let repeated = control
+        .submit_import(
+            "new.csv".into(),
+            Format::Csv,
+            ConflictPolicy::Upsert,
+            b"mapping_key,source_host,source_path,default_target_url\nQR1,example.com,/QR1,https://target.example/\n".to_vec(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(ready(&control, &repeated).await.status, "failed");
+    assert_eq!(&control.active.load().mappings[0].mapping.id, mapping_id);
+}
+
+#[tokio::test]
 async fn concurrent_draft_change_prevents_staged_import_activation() {
     let c = control().await;
     let id = c

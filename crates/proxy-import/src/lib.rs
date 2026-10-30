@@ -10,6 +10,7 @@ use std::{
 
 #[derive(Serialize, Deserialize)]
 struct FlatMapping {
+    #[serde(default)]
     external_id: String,
     mapping_key: String,
     #[serde(default)]
@@ -43,10 +44,13 @@ fn redirect() -> String {
 }
 impl FlatMapping {
     fn mapping(self, upstreams: &[Upstream]) -> Result<Mapping> {
-        ensure!(!self.external_id.is_empty(), "external_id is required");
         if !self.mapping_json.is_empty() {
             let mut mapping: Mapping = serde_json::from_str(&self.mapping_json)?;
-            mapping.id = self.external_id;
+            if !self.external_id.is_empty() {
+                mapping.id = self.external_id;
+            } else if mapping.id.is_empty() {
+                mapping.id = new_id();
+            }
             return Ok(mapping);
         }
         let action = match self.default_action_type.as_str() {
@@ -75,7 +79,11 @@ impl FlatMapping {
                 .context("condition_json must contain an array of complete mapping rules")?
         };
         Ok(Mapping {
-            id: self.external_id,
+            id: if self.external_id.is_empty() {
+                new_id()
+            } else {
+                self.external_id
+            },
             mapping_key: self.mapping_key,
             name: self.name,
             description: String::new(),
