@@ -40,3 +40,7 @@ The hosted recovery workflow https://github.com/Dizzd/link-proxy/actions/runs/40
 ## Single runtime TOML configuration
 
 release-single-config-*.log records the startup override fixture with a real Redis daemon, 59 Rust tests, fmt/check/clippy, source build, HTTP/restart/reset tests on both databases, PostgreSQL/Redis regressions, single-file Compose/profile assertions, packaging integrity tests and frontend build. These checks exercise the updated binary and generated configuration locally; they do not describe a new published image. The immutable v0.1.0 release keeps its original behavior.
+
+## Live sidebar cache status
+
+release-cache-badge-*.log records 17 passing Vitest tests, production frontend build, 59 Rust regression tests, fmt/clippy/server build and two passing Chromium workflows. The real admin flow reads memory status from the isolated backend; the separate browser fixture controls API responses to check Redis/loading/error/recovery rendering, without changing server configuration. Screenshots show the actual new memory badge and responsive layout. Backend Redis availability tests are recorded separately; these UI fixtures are not claimed as live Redis connectivity measurements.

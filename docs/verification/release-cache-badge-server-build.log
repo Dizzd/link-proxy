@@ -1,0 +1,10 @@
+   Compiling proxy-domain v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-domain)
+   Compiling proxy-storage v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-storage)
+   Compiling proxy-routing v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-routing)
+   Compiling proxy-cache v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-cache)
+   Compiling proxy-import v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-import)
+   Compiling proxy-application v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-application)
+   Compiling proxy-pingora v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-pingora)
+   Compiling proxy-admin-api v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-admin-api)
+   Compiling proxy-server v0.2.0 (/mnt/d/ETS/link-proxy/apps/proxy-server)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 24.82s

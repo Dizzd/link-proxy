@@ -63,6 +63,14 @@ export interface Active {
     domains: Entity[];
   };
 }
+export interface CacheStatus {
+  mode: "memory" | "memory_redis";
+  connected: boolean;
+  active_revision: number;
+  database_revision: number;
+  last_sync: string | null;
+  error: string | null;
+}
 export interface ImportJob extends Entity {
   status: string;
   base_revision: number;

@@ -144,3 +144,18 @@ Use one deployed config.toml for all cache modes. CACHE_MODE overrides only cach
 ## v0.2.0 pre-release preparation
 
 Release scope: one runtime config.toml, CACHE_MODE startup overrides, automatic Redis enable/disable, updated Compose/runtime archive and migration guidance from v0.1.0. Bump all workspace packages to 0.2.0 via the shared workspace version and regenerate Cargo.lock. Keep schema versions, data and the published v0.1.0 tag/image/assets unchanged. Publish v0.2.0 as a pre-release (not Latest), then verify the hosted image/full-stack smoke/GHCR/assets and downloaded checksums before marking publication complete.
+
+## Live cache badge correction
+
+The sidebar's Memory snapshots text was static and did not identify configuration-cache mode or Redis connectivity. Replace it with an authenticated cache-status query shared with Settings. Show actual mode/connection, explicit initial/unknown states, and never display stale Redis-connected data after a failed refresh. Routing continues to use its in-memory snapshot in both modes.
+
+- [x] Add a typed cache-status API and shared TanStack Query hook; replace the static sidebar label with an accessible status badge.
+- [x] Reuse the query in Settings and clarify configuration synchronization versus request routing.
+- [x] Verify memory/Redis/loading/failure/recovery states with focused UI tests and browser checks, plus frontend build. Record actual validation and keep published releases unchanged.
+
+### Cache badge verification
+
+- Replaced the static sidebar label with a typed authenticated query shared by Settings, polling every five seconds. Actual memory/Redis mode and reported connectivity are separate; initial, unknown/error and not-yet-synchronized states are explicit. Failed API refreshes suppress stale connected claims. An atomic contextual status region announces changes without moving focus; status is conveyed in text.
+- Added eight focused presentation tests, bringing Vitest to 17 passing tests. Production frontend build passes. Chromium passed two workflows: the real memory-mode administration/auth/publish/import/export flow and isolated API fixtures exercising loading, Redis connected, API failure with stale data, Redis unavailable, recovery and memory-only transition. Redis fixture responses are test-only and do not reconfigure a production server. Responsive width assertions and desktop/mobile screenshots passed; the desktop screenshot was visually inspected.
+- Linux cargo fmt, all-feature workspace tests (59 passed), all-target/all-feature clippy -D warnings and proxy-server build passed with unchanged backend logic. Evidence: docs/verification/release-cache-badge-*.log and updated administration screenshots.
+- The initial browser retry found ambiguous old status selectors after adding a second legitimate live region; selectors were scoped to the main content and both workflows passed on a fresh isolated backend. No backend configuration, persistence, routing hot path or published v0.2.0 image/tag was changed. Deployment needs a newly built frontend image to display the corrected badge.

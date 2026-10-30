@@ -2,13 +2,10 @@ import { ChangePasswordForm } from "../features/auth/ChangePasswordForm";
 import { useQuery } from "@tanstack/react-query";
 import { request, send } from "../api/client";
 import { useOperation } from "../hooks/useOperation";
+import { useCacheStatus } from "../hooks/useCacheStatus";
 import { ErrorMessage, JsonView } from "../components/common/Feedback";
 export default function SettingsPage() {
-  const q = useQuery({
-    queryKey: ["cache"],
-    queryFn: () => request("/system/cache/status"),
-    refetchInterval: 5000,
-  });
+  const q = useCacheStatus();
   const database = useQuery({
     queryKey: ["database"],
     queryFn: () => request("/system/database/status"),
@@ -31,8 +28,11 @@ export default function SettingsPage() {
       <section className="panel">
         <h2>Configuration synchronization</h2>
         <p>
-          The data plane always uses its local immutable snapshot. Listener,
-          network allowlist and Redis settings are managed in server TOML.
+          Requests always use local memory snapshots. Redis optionally caches
+          configuration and synchronizes revisions. The sidebar shows the last
+          connection state reported by periodic synchronization. CACHE_MODE
+          selects the mode at server startup; Redis tuning and network
+          allowlists are managed in config.toml.
         </p>
         <ErrorMessage error={q.error || op.error} />
         <JsonView value={q.data} />

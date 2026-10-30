@@ -13,3 +13,9 @@ Sharing Redis does not replicate SQLite. Use one control writer and a common aut
 ## Single-file startup configuration
 
 Deployments mount only config.toml. CACHE_MODE=memory or CACHE_MODE=memory_redis overrides the TOML cache mode and automatically sets cache.redis.enabled consistently at startup. Other Redis tuning is preserved, local memory stays mandatory, and invalid/empty/non-UTF-8 values fail startup. An absent variable leaves validated TOML settings unchanged. Enable the Redis Compose service separately with the redis profile; service selection does not silently change application behavior. Configuration changes require a proxy restart. New environment handling requires a new image; published v0.1.0 retains its original behavior.
+
+## Administration cache status
+
+The sidebar reads the authenticated /api/v1/system/cache/status endpoint and shares its query with Settings. Memory only identifies mode=memory. Memory + Redis identifies mode=memory_redis and separately shows the reported Redis connection state. Before the first synchronization it displays Awaiting Redis synchronization; a failed synchronization reports Redis unavailable while the local routing snapshot remains active. API failures display Cache unknown rather than stale Redis-connected data. The UI polls every five seconds; Redis availability is the last backend synchronization result, not a new network probe on every UI poll.
+
+Published v0.2.0 and earlier displayed a fixed Memory snapshots badge, which described request routing and did not indicate Redis configuration. The live badge requires an updated frontend image; existing release artifacts are unchanged. To inspect an older deployment immediately, use Settings & cache: mode=memory_redis and connected=true report Redis-enabled configuration and the last successful cache synchronization.

@@ -159,6 +159,16 @@ nav a.active {
 .sidebar-foot button {
   font-size: 12px;
 }
+.cache-status .badge {
+  background: transparent;
+  border: 1px solid currentColor;
+  color: inherit;
+}
+.cache-status small {
+  margin-top: 6px;
+  color: inherit;
+  line-height: 1.5;
+}
 .workspace {
   flex: 1;
   min-width: 0;

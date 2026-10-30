@@ -21,6 +21,9 @@ test("real administration workflow, routing and password session lifecycle", asy
   await expect(
     page.getByRole("heading", { name: "Traffic overview" }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("status", { name: "Configuration cache" }),
+  ).toContainText("Memory only");
   await page.getByRole("link", { name: "Mappings", exact: true }).click();
   await page.getByRole("link", { name: "Create mapping" }).click();
   await page.getByLabel("Mapping key").fill("browser-mapping");
@@ -43,7 +46,9 @@ test("real administration workflow, routing and password session lifecycle", asy
   await page
     .getByRole("button", { name: "Publish draft", exact: true })
     .click();
-  await expect(page.getByRole("status")).toContainText("Draft published");
+  await expect(page.locator("#content").getByRole("status")).toContainText(
+    "Draft published",
+  );
   const response = await request.get(
     `${process.env.PROXY_BROWSER_URL || "http://127.0.0.1:8080"}/browser`,
     {
@@ -78,7 +83,7 @@ test("real administration workflow, routing and password session lifecycle", asy
   expect((await downloading).suggestedFilename()).toBe("mappings.json");
   await page.getByRole("link", { name: "Settings", exact: true }).click();
   await page.getByRole("button", { name: "Reconcile from database" }).click();
-  await expect(page.getByRole("status")).toContainText(
+  await expect(page.locator("#content").getByRole("status")).toContainText(
     "Reconciliation completed",
   );
   await page.getByRole("link", { name: "Monitoring", exact: true }).click();

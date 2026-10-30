@@ -1,0 +1,12 @@
+    Checking proxy-domain v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-domain)
+    Checking proxy-observability v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-observability)
+    Checking proxy-routing v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-routing)
+    Checking proxy-storage v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-storage)
+    Checking proxy-cache v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-cache)
+    Checking proxy-import v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-import)
+    Checking proxy-application v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-application)
+    Checking proxy-admin-api v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-admin-api)
+    Checking proxy-pingora v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-pingora)
+    Checking proxy-e2e v0.2.0 (/mnt/d/ETS/link-proxy/crates/proxy-e2e)
+    Checking proxy-server v0.2.0 (/mnt/d/ETS/link-proxy/apps/proxy-server)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 10.99s

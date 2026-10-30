@@ -1,4 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
+import { CacheStatusBadge } from "./CacheStatusBadge";
 const links = [
   ["/", "Overview"],
   ["/mappings", "Mappings"],
@@ -41,7 +42,7 @@ export function Layout({
           ))}
         </nav>
         <div className="sidebar-foot">
-          <span className="badge">Memory snapshots</span>
+          <CacheStatusBadge />
           <p>Signed in as {username}</p>
           <button className="quiet" disabled={signingOut} onClick={logout}>
             Sign out
