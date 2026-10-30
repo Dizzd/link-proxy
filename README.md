@@ -4,6 +4,8 @@ Dynamic URL mapping and conditional routing with a Pingora data plane, Axum mana
 
 ## v0.3.0 pre-release
 
+**Verified build:** [v0.3.0 release workflow](https://github.com/Dizzd/link-proxy/actions/runs/41023415399) passed image build, full-stack container smoke, GHCR push and upload of all eight assets. The downloaded bundle matched all seven checksums and six archive members.
+
 An early release for evaluation and controlled deployments. The application image currently supports **linux/amd64**. Deployment assets are attached to the [v0.3.0 pre-release](https://github.com/Dizzd/link-proxy/releases/tag/v0.3.0) only after its [Container release workflow](https://github.com/Dizzd/link-proxy/actions/workflows/release.yml) succeeds. A published release page alone does not mean the image/bundle is ready.
 
 **New in v0.3.0:** grouped, collapsible sidebar navigation; a visual Monitoring dashboard with request-rate and response-time charts, summary cards, import totals and pause/resume controls; and live configuration-cache mode/Redis status. Monitoring keeps up to 60 in-page samples collected while the page is open. Runtime deployments retain one config.toml and CACHE_MODE from v0.2.0.

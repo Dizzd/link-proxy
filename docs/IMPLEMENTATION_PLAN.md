@@ -172,3 +172,9 @@ Verification: 22 frontend tests passed; all three Chromium workflows passed, inc
 ## v0.3.0 pre-release preparation
 
 Release scope: grouped/collapsible sidebar navigation, visual Monitoring charts and summaries, and live configuration-cache/Redis status since v0.2.0. Bump the shared Rust workspace version to 0.3.0 and regenerate Cargo.lock without dependency upgrades. Keep existing SQL migrations, data, source URLs, runtime configuration and published releases unchanged. Publish v0.3.0 as a pre-release, not Latest. Hosted image build, full-stack smoke, GHCR push, asset upload and downloaded bundle checks remain pending until execution evidence confirms them.
+
+### v0.3.0 publication verified
+
+Published https://github.com/Dizzd/link-proxy/releases/tag/v0.3.0 as a pre-release, not Latest, from commit 280940bd112a2646af5b26315934ff26d8b3e41f. Container release run https://github.com/Dizzd/link-proxy/actions/runs/41023415399 completed successfully: Rust/frontend/deployment validation, linux/amd64 image build, actual PostgreSQL/proxy/Caddy/Redis smoke test, GHCR push, Compose validation and upload of all eight assets.
+
+Image ghcr.io/dizzd/link-proxy:v0.3.0 has manifest digest sha256:581fcacc6128774450d2fd80adc9dbece61d3002a3ee263486f066e32466021e. Downloaded all actual release assets via authenticated GitHub access: all seven SHA256SUMS entries and six archive members matched; release.json and the environment example pin that image digest. Evidence is in docs/verification/release-v0.3.0-assets.log, release-v0.3.0-hosted.log and release-v0.3.0-workflow.json. The image targets linux/amd64; production deployment/benchmarks are not claimed. This documentation update does not retarget the published tag or modify existing releases.

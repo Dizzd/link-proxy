@@ -1,0 +1,4 @@
+﻿rust / test	UNKNOWN STEP	2026-10-30T08:01:54.7300303Z {"process_recovery": "passed", "password_reset_cli": "passed", "committed_revision": 10, "real_pingora_http_tests": "passed"}
+rust / test	UNKNOWN STEP	2026-10-30T08:02:16.6412376Z {"process_recovery": "passed", "password_reset_cli": "passed", "committed_revision": 10, "real_pingora_http_tests": "passed"}
+publish	Smoke-test the exact image before publishing	2026-10-30T08:14:37.3640829Z Release image smoke passed: UI, password session, PostgreSQL, Redis, publish, Caddy -> Pingora redirect
+publish	Push tested image and package pinned deployment files	2026-10-30T08:14:39.4893937Z v0.3.0: digest: sha256:581fcacc6128774450d2fd80adc9dbece61d3002a3ee263486f066e32466021e size: 1433
