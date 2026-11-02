@@ -6,7 +6,7 @@ Dynamic URL mapping and conditional routing with a Pingora data plane, Axum mana
 
 Version 1.0.0 brings together conditional URL routing, authenticated administration, revision-based configuration and staged bulk import/export. Supported deployment choices are SQLite or PostgreSQL, with optional Redis synchronization and Caddy ingress.
 
-The application image supports **linux/amd64**. The commands below target the `v1.0.0` release. Its image and deployment assets become available only after publication and a successful [Container release workflow](https://github.com/Dizzd/link-proxy/actions/workflows/release.yml). This README does not assert that v1.0.0 has already been published or verified; check the workflow for the exact tag before deploying.
+The application image supports **linux/amd64**. The [v1.0.0 stable release](https://github.com/Dizzd/link-proxy/releases/tag/v1.0.0) is published. Its [release workflow](https://github.com/Dizzd/link-proxy/actions/runs/41383412049) passed Rust, frontend and deployment checks, image build, full-stack container smoke, GHCR push and upload of all eight assets. The downloaded bundle matched all seven checksums and six archive members. See [v1.0.0 verification evidence](docs/verification/release-v1.0.0.md).
 
 CSV/XLSX bulk imports generate UUIDs when `external_id` is empty or omitted. Explicit IDs and IDs embedded in `mapping_json` are preserved. Generated IDs remain stable through preview and idempotent commit retries. Updating an existing `mapping_key` requires its correct stable ID. Each flat import row must provide its own `source_host`; blank cells do not inherit previous rows. Runtime deployments use one `config.toml`, with `CACHE_MODE` selecting `memory` or `memory_redis` at startup.
 

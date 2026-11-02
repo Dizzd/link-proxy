@@ -206,3 +206,7 @@ Executed Linux/WSL fmt/check/test/clippy, server build and the real HTTP/recover
 ## v1.0.0 stable release preparation
 
 Aligned Cargo workspace packages and the private frontend to 1.0.0, regenerated Cargo.lock offline and confirmed only eleven internal package versions changed. Linux/WSL fmt/check/test/clippy, server build, real HTTP/recovery/shutdown, disposable PostgreSQL tests, runtime Redis configuration checks and packaging tests passed. Frontend build and 22 tests passed. See [release-v1.0.0.md](verification/release-v1.0.0.md) for commands, logs and unexecuted checks. Hosted image smoke/publication and downloaded-asset verification remain pending at source commit time.
+
+### v1.0.0 publication verified
+
+Published https://github.com/Dizzd/link-proxy/releases/tag/v1.0.0 as a stable release marked Latest, from commit 20df8f041022a4c2c65f84f9141c344a58c72d91. Workflow https://github.com/Dizzd/link-proxy/actions/runs/41383412049 passed all four jobs, including actual image build, PostgreSQL/proxy/Caddy/Redis smoke, GHCR push and upload of all eight assets. Download verification passed all seven checksums and six archive-member comparisons. The pinned linux/amd64 image digest is sha256:60e6bbefabab2172cd876e42d6f94f66ae274ea94fa70d621f6cac666526166a, matching metadata, environment and hosted push logs. Evidence: [release-v1.0.0.md](verification/release-v1.0.0.md). No production deployment or production benchmark is claimed.
