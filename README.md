@@ -2,15 +2,17 @@
 
 Dynamic URL mapping and conditional routing with a Pingora data plane, Axum management API and React administration dashboard. A QR identifier is an ordinary Mapping key; all matching, conditions and destination actions use the same domain.
 
-## v0.3.1 pre-release
+## v1.0.0
 
-**Verified build:** [v0.3.1 release workflow](https://github.com/Dizzd/link-proxy/actions/runs/41032028403) passed Rust/frontend/deployment checks, image build, full-stack container smoke, GHCR push and upload of all eight assets. The downloaded bundle matched all seven checksums and six archive members. See [verification evidence](docs/verification/release-v0.3.1.md).
+Version 1.0.0 brings together conditional URL routing, authenticated administration, revision-based configuration and staged bulk import/export. Supported deployment choices are SQLite or PostgreSQL, with optional Redis synchronization and Caddy ingress.
 
-An early release for evaluation and controlled deployments. The application image currently supports **linux/amd64**. Deployment assets are attached to the [v0.3.1 pre-release](https://github.com/Dizzd/link-proxy/releases/tag/v0.3.1) only after its [Container release workflow](https://github.com/Dizzd/link-proxy/actions/workflows/release.yml) succeeds. A published release page alone does not mean the image/bundle is ready.
+The application image supports **linux/amd64**. The commands below target the `v1.0.0` release. Its image and deployment assets become available only after publication and a successful [Container release workflow](https://github.com/Dizzd/link-proxy/actions/workflows/release.yml). This README does not assert that v1.0.0 has already been published or verified; check the workflow for the exact tag before deploying.
 
-**Fixed in v0.3.1:** CSV/XLSX bulk imports generate UUIDs when external_id is empty or omitted. Explicit IDs and IDs embedded in mapping_json are preserved. Generated IDs remain stable through preview and idempotent commit retries. Existing mapping_key conflicts still require the correct stable ID for updates. Each row must provide its own source_host; blank cells do not inherit previous rows. Runtime deployments retain one config.toml and CACHE_MODE from v0.2.0.
+CSV/XLSX bulk imports generate UUIDs when `external_id` is empty or omitted. Explicit IDs and IDs embedded in `mapping_json` are preserved. Generated IDs remain stable through preview and idempotent commit retries. Updating an existing `mapping_key` requires its correct stable ID. Each flat import row must provide its own `source_host`; blank cells do not inherit previous rows. Runtime deployments use one `config.toml`, with `CACHE_MODE` selecting `memory` or `memory_redis` at startup.
 
-**Upgrading from v0.1.0:** preserve your effective TOML content as config.toml, including allowlists/authentication and Redis tuning. Replace the old file-selection variable with CACHE_MODE and use the v0.3.1 image and Compose together. Retain the original database URL, Compose project name and volumes. The v0.1.0 image ignores CACHE_MODE; its published artifacts remain unchanged. See the bundle README for migration instructions.
+**Upgrading from v0.1.0:** preserve your effective TOML content as `config.toml`, including allowlists/authentication and Redis tuning. Replace the old file-selection variable with `CACHE_MODE` and use the new release image and Compose together. Retain the original database URL, Compose project name and volumes. The v0.1.0 image ignores `CACHE_MODE`; its published artifacts remain unchanged. See the [bundle README](deploy/README.md) for migration instructions.
+
+Historical evidence is available for the [v0.3.1 pre-release](https://github.com/Dizzd/link-proxy/releases/tag/v0.3.1), its [successful workflow](https://github.com/Dizzd/link-proxy/actions/runs/41032028403) and [download verification](docs/verification/release-v0.3.1.md). Those results describe v0.3.1, not v1.0.0.
 
 New release bundles contain dynamic-url-proxy-deploy.tar.gz, a single docker-compose.yml, .env.example, Caddyfile, config.toml, release metadata and SHA256SUMS. The bundle pins the exact GHCR image digest; no source build, Rust or Node is required on the deployment server.
 
@@ -33,7 +35,7 @@ Normal routing requests read only the immutable in-memory snapshot; they never q
 
 The Container release GitHub Action runs when a GitHub Release is published. It gates on Rust, frontend and deployment checks, builds the linux/amd64 image, smoke-tests PostgreSQL + proxy + Caddy + Redis, pushes the tested image to ghcr.io/dizzd/link-proxy:RELEASE_TAG and uploads an immutable-digest deployment bundle to that release. Release credentials use GITHUB_TOKEN; administrator/database passwords are set only on your server.
 
-Download the runtime bundle and SHA256SUMS from [v0.3.1 Assets](https://github.com/Dizzd/link-proxy/releases/tag/v0.3.1) after the Container release workflow succeeds. This repository is private: use an authenticated browser or GitHub CLI to download the files. You can download on your workstation and upload the archive/checksums to the server; the server itself needs only Docker Engine and Docker Compose >= 2.20.0.
+Download the runtime bundle and SHA256SUMS from [v1.0.0 Assets](https://github.com/Dizzd/link-proxy/releases/tag/v1.0.0) after the Container release workflow succeeds. For a private repository, use an authenticated browser or GitHub CLI to download the files. You can download on your workstation and upload the archive/checksums to the server; the server itself needs only Docker Engine and Docker Compose >= 2.20.0.
 
 Use the archive to preserve all file names and relative mounts. GitHub lists the standalone environment asset as default.env.example; inside the archive it is .env.example as used below.
 
@@ -44,7 +46,7 @@ mkdir -p ~/link-proxy
 cd ~/link-proxy
 # GitHub CLI is only needed on the machine downloading the private assets.
 gh auth login
-gh release download v0.3.1 --repo Dizzd/link-proxy \
+gh release download v1.0.0 --repo Dizzd/link-proxy \
   --pattern dynamic-url-proxy-deploy.tar.gz --pattern SHA256SUMS
 tar -xzf dynamic-url-proxy-deploy.tar.gz
 sha256sum -c SHA256SUMS
@@ -62,9 +64,9 @@ docker compose ps
 
 The image targets **linux/amd64**. The package owner can make GHCR public for anonymous image pulls; publishing a release does not change visibility. Private packages require a user/token authorized to read that package; registry credentials are separate from the application's administrator account. Do not copy GitHub tokens into .env.
 
-Pre-releases are not resolved by GitHub's releases/latest download URL. Always select the v0.3.1 tag explicitly. If the repository is made public, its direct archive URL is https://github.com/Dizzd/link-proxy/releases/download/v0.3.1/dynamic-url-proxy-deploy.tar.gz.
+Select the `v1.0.0` tag explicitly so the downloaded bundle matches these instructions. Pre-releases are not resolved by GitHub's releases/latest download URL. For public downloads, the versioned archive URL is https://github.com/Dizzd/link-proxy/releases/download/v1.0.0/dynamic-url-proxy-deploy.tar.gz.
 
-Set these environment values before startup for v0.3.1 (use the bundled README for older releases):
+Set these environment values before startup for v1.0.0 (use the bundled README for older releases):
 
 | Variable | Purpose |
 |---|---|
@@ -83,7 +85,7 @@ Enable Redis with COMPOSE_PROFILES=postgres,caddy,redis and CACHE_MODE=memory_re
 
 For source development, the root docker-compose.yml contains the same services but builds the application locally: copy .env.example to .env, edit it, then run docker compose up --build -d. Dockerfile, migrations and the built frontend are included in the published image; release hosts need no Rust/Node toolchain.
 
-For upgrades, extract the new bundle into a separate directory and compare configuration. Keep the original COMPOSE_PROJECT_NAME, .env, TOML files, Caddyfile and database/certificate volumes; update only PROXY_IMAGE to the new release digest and reviewed deployment files. Then run docker compose pull and docker compose up -d --wait --wait-timeout 180. Do not overwrite the existing .env with the new example. Never use down -v on retained data. Existing SQLite data is not copied to PostgreSQL automatically. See [deployment](docs/DEPLOYMENT.md) and the bundle's README for backups, upgrades and options.
+For upgrades, extract the new bundle into a separate directory and compare configuration. Keep the original COMPOSE_PROJECT_NAME, .env, config.toml, Caddyfile and database/certificate volumes; update only PROXY_IMAGE to the new release digest and reviewed deployment files. Then run docker compose pull and docker compose up -d --wait --wait-timeout 180. Do not overwrite the existing .env with the new example. Never use down -v on retained data. Existing SQLite data is not copied to PostgreSQL automatically. See [deployment](docs/DEPLOYMENT.md) and the bundle's README for backups, upgrades and options.
 
 ## Source development requirements
 
@@ -183,7 +185,7 @@ bash scripts/benchmark.sh
 
 Live HTTP tests are ignored in ordinary `cargo test` because they require real listeners; `scripts/e2e.py` starts an isolated Pingora process and echo backend and explicitly executes them. Scale imports and real Redis tests are also opt-in; see [Test plan](docs/TEST_PLAN.md). Results and actual limitations are recorded in [implementation progress](docs/IMPLEMENTATION_PLAN.md) and [benchmarks](docs/BENCHMARK.md).
 
-## Pre-release boundaries
+## Operational limits
 
 - Run one active control-plane process per database; import worker ownership and login rate limits are process-local.
 - Changing DATABASE_URL selects another database; it does not copy users, mappings or revision history automatically.
@@ -198,13 +200,25 @@ Real import samples: `examples/import/basic.csv`, `examples/import/advanced.json
 
 Read [architecture](docs/ARCHITECTURE.md), [API contract](docs/API_CONTRACT.md), [routing semantics](docs/ROUTING_SPEC.md), [security](docs/SECURITY.md), [import/export](docs/BULK_IMPORT_EXPORT.md), and [configuration lifecycle](docs/CONFIGURATION_LIFECYCLE.md) before production deployment. Use one active control-plane process per database. PostgreSQL and SQLite use separate embedded migration directories; both support authenticated administration, staged imports and configuration recovery.
 
+## Prepare and publish v1.0.0
+
+Complete these steps in order:
+
+1. Align `[workspace.package].version` in `Cargo.toml` and the private frontend version in `apps/admin-web/package.json` to `1.0.0`. Regenerate `Cargo.lock` with Cargo and review the workspace package version changes; keep dependency versions unchanged unless a separate change requires them.
+2. Run the checks in [Verify](#verify) on Linux/WSL, including the real HTTP, recovery and shutdown harness. Execute any relevant opt-in tests explicitly. Record actual results and remaining limitations under `docs/verification` and in `docs/IMPLEMENTATION_PLAN.md`.
+3. Review and commit the release changes, then create and push the `v1.0.0` tag from that commit. Create a GitHub Release for that exact tag; leave the pre-release option unchecked for the stable release.
+4. Publishing the GitHub Release triggers the Container release workflow. Wait for Rust, frontend, deployment validation, image smoke testing, GHCR publication and asset upload to succeed. A tag push alone does not trigger this workflow.
+5. Download the generated assets, check `SHA256SUMS` against the extracted files and archive, and confirm `release.json` and `PROXY_IMAGE` identify the same immutable image digest. Record the workflow URL, source commit and verified digest before announcing deployment availability.
+
+The workflow takes the image tag and bundle version from the GitHub Release tag; it does not update Cargo or frontend package versions. Historical verification and benchmark results do not establish v1.0.0 acceptance or production capacity.
+
 ## Release workflow recovery
 
 Maintainers can retry an existing release from its exact tag:
 
 ```bash
 gh workflow run release.yml --repo Dizzd/link-proxy \
-  --ref v0.3.1 --field release_tag=v0.3.1
+  --ref v1.0.0 --field release_tag=v1.0.0
 ```
 
 The workflow requires its Git ref and release_tag to match, so the validation jobs and image build use the same source commit. It refuses branch-based builds for a release tag. Debian's built-in proxy system user is preserved; the application image runs under its own urlproxy account (UID 10001).

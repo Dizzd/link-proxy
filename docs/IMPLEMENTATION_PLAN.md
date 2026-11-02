@@ -196,3 +196,13 @@ Include the optional bulk-import mapping ID fix and verification-artifact ignore
 Published https://github.com/Dizzd/link-proxy/releases/tag/v0.3.1 as a pre-release, not Latest, from 71bf8c53e41cef3b72168bbe38fc854e6ffeebde. Workflow https://github.com/Dizzd/link-proxy/actions/runs/41032028403 passed all four jobs, including real Rust HTTP/PostgreSQL/configuration tests, frontend/deployment validation, image build, PostgreSQL/proxy/Caddy/Redis smoke, GHCR push and all eight asset uploads.
 
 Downloaded and verified all seven checksums and all six archive members. The published image digest matches release.json and the environment example: ghcr.io/dizzd/link-proxy@sha256:20df0b24f96c5d3b9ed67b394daa83ccad3991b35e1d2021b5923317233fc9bb (linux/amd64). Evidence: [release-v0.3.1.md](verification/release-v0.3.1.md). Raw logs and downloads remain local under the updated ignore policy. Production deployment and production benchmarks are not claimed.
+
+## v1.0.0 README preparation
+
+Updated the root README to target v1.0.0 deployment and workflow recovery, retain historical verification links and document stable release preparation and operational limits. Source code and package versions remain unchanged. Cargo is still 0.3.1 and the private frontend package is 0.1.0; align them before tagging.
+
+Executed Linux/WSL fmt/check/test/clippy, server build and the real HTTP/recovery/shutdown harness; all passed. Workspace tests reported 62 passed and 10 ignored; the HTTP harness explicitly ran five ignored HTTP tests. Frontend build and 22 tests passed. Evidence and unexecuted checks: [readme-v1.0.0.md](verification/readme-v1.0.0.md). No v1.0.0 tag, GitHub Release, Docker publication, deployment or benchmark is claimed.
+
+## v1.0.0 stable release preparation
+
+Aligned Cargo workspace packages and the private frontend to 1.0.0, regenerated Cargo.lock offline and confirmed only eleven internal package versions changed. Linux/WSL fmt/check/test/clippy, server build, real HTTP/recovery/shutdown, disposable PostgreSQL tests, runtime Redis configuration checks and packaging tests passed. Frontend build and 22 tests passed. See [release-v1.0.0.md](verification/release-v1.0.0.md) for commands, logs and unexecuted checks. Hosted image smoke/publication and downloaded-asset verification remain pending at source commit time.
