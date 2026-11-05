@@ -2368,7 +2368,7 @@ dependencies = [
 
 [[package]]
 name = "proxy-admin-api"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "argon2",
@@ -2400,7 +2400,7 @@ dependencies = [
 
 [[package]]
 name = "proxy-application"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "arc-swap",
@@ -2422,7 +2422,7 @@ dependencies = [
 
 [[package]]
 name = "proxy-cache"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -2442,7 +2442,7 @@ dependencies = [
 
 [[package]]
 name = "proxy-domain"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "chrono",
  "serde",
@@ -2452,7 +2452,7 @@ dependencies = [
 
 [[package]]
 name = "proxy-e2e"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "proxy-admin-api",
@@ -2465,7 +2465,7 @@ dependencies = [
 
 [[package]]
 name = "proxy-import"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "calamine",
@@ -2482,7 +2482,7 @@ dependencies = [
 
 [[package]]
 name = "proxy-observability"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "prometheus",
@@ -2492,7 +2492,7 @@ dependencies = [
 
 [[package]]
 name = "proxy-pingora"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -2509,7 +2509,7 @@ dependencies = [
 
 [[package]]
 name = "proxy-routing"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "chrono",
@@ -2525,7 +2525,7 @@ dependencies = [
 
 [[package]]
 name = "proxy-server"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "axum",
@@ -2542,7 +2542,7 @@ dependencies = [
 
 [[package]]
 name = "proxy-storage"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "anyhow",
  "chrono",

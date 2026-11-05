@@ -228,3 +228,9 @@ Evidence and limits: [mapping-bulk-delete.md](verification/mapping-bulk-delete.m
 - [x] Linux/WSL fmt/check/all-feature workspace tests (69 passed, 10 ignored), Clippy, server build and real HTTP/recovery/password-reset/graceful-shutdown checks passed. Disposable PostgreSQL cleanup/import-retry integration and HTTP checks passed. Frontend build, 26 unit tests, mocked browser scenario and real SQLite browser scenario passed.
 
 Evidence and limits: [revision-cleanup.md](verification/revision-cleanup.md). The HTTP/PostgreSQL harnesses explicitly executed their ignored tests; separate Redis/scale tests were not rerun. Cleanup preserves protected revisions in addition to the newest N, requires a fresh preview per batch, and does not compact SQLite files or purge audit/import history. No deployment or production benchmark is claimed.
+
+## v1.1.0 stable release preparation
+
+Aligned the Cargo workspace and private frontend to 1.1.0 for bulk Mapping deletion and explicit revision cleanup. Cargo regenerated the lockfile offline; only eleven workspace package versions changed. Updated current release/deployment instructions without changing existing releases, migrations, data or operator configuration.
+
+Linux/WSL fmt/check/workspace tests (69 passed, 10 ignored), Clippy, server build, real HTTP/recovery/password-reset/graceful-shutdown, disposable PostgreSQL cleanup/import-retry, Redis configuration and three packaging tests passed. Frontend build and 26 tests passed. Evidence: [release-v1.1.0.md](verification/release-v1.1.0.md). Hosted image smoke/publication, deployment validation and downloaded assets remain pending at source commit time; no deployment or production benchmark is claimed.
