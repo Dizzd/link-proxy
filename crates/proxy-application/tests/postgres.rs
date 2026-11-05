@@ -89,4 +89,20 @@ async fn postgres_migrations_crud_import_revision_recovery_and_concurrency() {
     let recovered = ControlPlane::open(settings).await.unwrap();
     assert_eq!(recovered.active.load().revision, restored);
     assert_eq!(recovered.active.load().mappings.len(), 1);
+    let preview = recovered.preview_revision_prune(1).await.unwrap();
+    assert!(preview.versions.contains(&first));
+    let deleted = recovered.prune_revisions(&preview).await.unwrap();
+    assert_eq!(deleted, preview.versions.len() as u64);
+    assert!(recovered.store.revision(first).await.is_err());
+    assert_eq!(recovered.active.load().revision, restored);
+    assert!(recovered.store.revision(restored).await.is_ok());
+    assert!(recovered.prune_revisions(&preview).await.is_err());
+    assert_eq!(
+        recovered
+            .commit_import(&job, current, ConflictPolicy::Reject, true, "pg-commit")
+            .await
+            .unwrap()
+            .revision,
+        Some(committed)
+    );
 }

@@ -48,6 +48,79 @@ async fn administration_requires_authentication() {
         assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
     }
 }
+
+#[tokio::test]
+async fn revision_cleanup_requires_preview_validates_retention_and_rejects_stale_confirmation() {
+    let c = control().await;
+    let app = proxy_admin_api::router(c.clone(), TOKEN).unwrap();
+    let path = "/api/v1/config/revisions/prune/preview";
+    let (status, empty) = request(&app, "POST", path, json!({})).await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(empty["keep_latest"], 100);
+    assert_eq!(empty["versions"], json!([]));
+    for keep in [0, 10001] {
+        assert_eq!(
+            request(&app, "POST", path, json!({"keep_latest":keep}))
+                .await
+                .0,
+            StatusCode::UNPROCESSABLE_ENTITY
+        );
+    }
+    assert_eq!(
+        request(&app, "POST", "/api/v1/config/revisions/prune", json!({}))
+            .await
+            .0,
+        StatusCode::UNPROCESSABLE_ENTITY
+    );
+    for expected in 0..3 {
+        c.publish(expected, None).await.unwrap();
+    }
+    let (_, preview) = request(&app, "POST", path, json!({"keep_latest":1})).await;
+    assert_eq!(preview["versions"], json!([1, 2]));
+    c.publish(3, None).await.unwrap();
+    assert_eq!(
+        request(&app, "POST", "/api/v1/config/revisions/prune", preview)
+            .await
+            .0,
+        StatusCode::CONFLICT
+    );
+    let (_, preview) = request(&app, "POST", path, json!({"keep_latest":1})).await;
+    let (status, result) = request(&app, "POST", "/api/v1/config/revisions/prune", preview).await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(result["deleted_count"], 3);
+    assert_eq!(c.active.load().revision, 4);
+    let (status, _) = request(
+        &app,
+        "POST",
+        "/api/v1/config/revisions/prune",
+        json!({"padding":"x".repeat(16 * 1024)}),
+    )
+    .await;
+    assert_eq!(status, StatusCode::PAYLOAD_TOO_LARGE);
+}
+
+#[tokio::test]
+async fn revision_cleanup_endpoints_require_authentication() {
+    let app = proxy_admin_api::router(control().await, TOKEN).unwrap();
+    for path in [
+        "/api/v1/config/revisions/prune/preview",
+        "/api/v1/config/revisions/prune",
+    ] {
+        let response = app
+            .clone()
+            .oneshot(
+                Request::builder()
+                    .method("POST")
+                    .uri(path)
+                    .header("Content-Type", "application/json")
+                    .body(Body::from("{}"))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+    }
+}
 #[tokio::test]
 async fn mapping_crud_publish_simulate_and_revision_conflict() {
     let c = control().await;

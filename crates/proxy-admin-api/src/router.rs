@@ -76,6 +76,14 @@ pub fn router(control: Arc<ControlPlane>, token: &str) -> Result<Router> {
         )
         .route("/config/active", get(active))
         .route("/config/revisions", get(revisions))
+        .route(
+            "/config/revisions/prune/preview",
+            post(preview_revision_prune).layer(DefaultBodyLimit::max(16 * 1024)),
+        )
+        .route(
+            "/config/revisions/prune",
+            post(prune_revisions).layer(DefaultBodyLimit::max(16 * 1024)),
+        )
         .route("/config/publish", post(publish))
         .route("/config/revisions/{version}/restore", post(restore))
         .route("/system/cache/status", get(cache_status))

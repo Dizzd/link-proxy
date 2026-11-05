@@ -91,11 +91,15 @@ Commit body:
 |---|---|---|
 | GET | /config/active | `{revision,draft_generation,configuration}` |
 | GET | /config/revisions | `{items:[{version,status,checksum,created_at}]}`, latest 200 |
+| POST | /config/revisions/prune/preview | `{keep_latest:100}` (optional field, default 100; integer 1..10000) → cleanup preview below; does not delete |
+| POST | /config/revisions/prune | Submit the complete unchanged preview → `{deleted_count}`; at most 500 deleted in one transaction; 409 if preview changed |
 | POST | /config/publish | `{expected_revision:n}` → `{revision:new}` |
 | POST | /config/revisions/{version}/restore | `{expected_revision:n}` → new revision |
 | GET | /system/cache/status | mode, connected, active_revision, database_revision, last_sync, error |
 | POST | /system/cache/reconcile | reconcile from SQLite; return cache status |
 | GET | /audit-events | offset/limit; `{items}` |
+
+Revision cleanup preview: `{keep_latest,database_revision,active_revision,total_revisions,eligible_count,versions:[...]}`. Candidates are the oldest superseded revisions outside the newest `keep_latest`, excluding the actual runtime and committed database pointers. All active/committed statuses remain protected. `eligible_count` includes all eligible rows; `versions` includes at most the oldest 500. The server recomputes and compares the complete preview under the control-plane mutation lock and database write lock before deletion. Publish, restore or another cleanup can invalidate a preview; obtain a new preview after a 409 or before another batch. Both cleanup endpoints require authentication and cookie-session CSRF, accept at most 16KiB JSON and reject unknown fields. Cleanup records `revision_prune` in audit history, preserves draft/import/audit records and does not publish, change pointers or renumber revisions. Deleted history cannot be restored. No automatic retention cleanup runs.
 
 Outside `/api/v1`: authenticated `GET /health`, `/health/live`, `/health/ready` return status/revision; `GET /metrics` exposes Prometheus text. Readiness confirms a loaded snapshot and a bounded TCP connection to the configured Pingora listener. It returns 503 when that listener is unavailable; liveness does not depend on SQLite or Redis.
 

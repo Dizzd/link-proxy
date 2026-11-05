@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { config } from "../api/config";
 import { useOperation } from "../hooks/useOperation";
 import { ErrorMessage } from "../components/common/Feedback";
+import { RevisionCleanup } from "../features/revisions/RevisionCleanup";
 export default function RevisionsPage() {
   const active = useQuery({ queryKey: ["active"], queryFn: config.active });
   const q = useQuery({ queryKey: ["revisions"], queryFn: config.revisions });
@@ -11,7 +12,7 @@ export default function RevisionsPage() {
       <h1>Configuration revisions</h1>
       <p>
         Active revision: {active.data?.revision ?? "Loading…"}. Publish compiles
-        the full draft, commits SQLite, then activates the snapshot.
+        the full draft, commits the database, then activates the snapshot.
       </p>
       <button
         disabled={op.busy || !active.data}
@@ -26,6 +27,11 @@ export default function RevisionsPage() {
       </button>
       <ErrorMessage error={op.error || q.error} />
       <p role="status">{op.notice}</p>
+      <RevisionCleanup operation={op} activeRevision={active.data?.revision} />
+      <p>
+        Showing up to 200 latest revisions. Cleanup previews include all stored
+        revisions.
+      </p>
       <div className="table-scroll">
         <table>
           <thead>

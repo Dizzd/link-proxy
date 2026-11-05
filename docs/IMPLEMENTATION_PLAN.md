@@ -219,3 +219,12 @@ Published https://github.com/Dizzd/link-proxy/releases/tag/v1.0.0 as a stable re
 - [x] Linux/WSL fmt, workspace check, all-feature tests (62 passed, 10 ignored), Clippy, proxy-server build and real HTTP/recovery/password-reset/graceful-shutdown harness passed. The harness explicitly executed five ignored HTTP tests.
 
 Evidence and limits: [mapping-bulk-delete.md](verification/mapping-bulk-delete.md). Browser bulk deletion was tested against mocked API responses; no live-backend browser bulk-delete test, deployment, Docker run or production benchmark is claimed. Separate PostgreSQL, Redis and scale tests were not rerun.
+
+## Explicit revision cleanup
+
+- [x] Add authenticated preview and explicit confirmation for old revision cleanup, defaulting to the latest 100 with a 1..10000 keep range and at most 500 deletions per batch. Only superseded revisions outside the newest N are eligible; runtime/database pointers and active/committed statuses remain protected.
+- [x] Serialize cleanup with mutation/database locks, recompute and compare the complete preview, reject stale/tampered confirmation and commit deletion plus audit atomically. Preserve draft/source URLs, stable IDs, import retry results, version monotonicity and audit history. No automatic deletion or schema changes.
+- [x] Add Revisions cleanup controls and handle invalid inputs, cancellation, busy state, stale conflict and repeated batches. Fix the preview-reset race found by the real browser test when active-revision data was stale.
+- [x] Linux/WSL fmt/check/all-feature workspace tests (69 passed, 10 ignored), Clippy, server build and real HTTP/recovery/password-reset/graceful-shutdown checks passed. Disposable PostgreSQL cleanup/import-retry integration and HTTP checks passed. Frontend build, 26 unit tests, mocked browser scenario and real SQLite browser scenario passed.
+
+Evidence and limits: [revision-cleanup.md](verification/revision-cleanup.md). The HTTP/PostgreSQL harnesses explicitly executed their ignored tests; separate Redis/scale tests were not rerun. Cleanup preserves protected revisions in addition to the newest N, requires a fresh preview per batch, and does not compact SQLite files or purge audit/import history. No deployment or production benchmark is claimed.

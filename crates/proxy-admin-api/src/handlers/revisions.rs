@@ -9,6 +9,21 @@ pub(crate) async fn active(State(s): State<ApiState>) -> ApiResult<Json<Value>> 
 pub(crate) async fn revisions(State(s): State<ApiState>) -> ApiResult<Json<Value>> {
     Ok(Json(json!({"items":s.control.store.revisions().await?})))
 }
+pub(crate) async fn preview_revision_prune(
+    State(s): State<ApiState>,
+    Json(input): Json<RevisionRetention>,
+) -> ApiResult<Json<Value>> {
+    Ok(Json(serde_json::to_value(
+        s.control.preview_revision_prune(input.keep_latest).await?,
+    )?))
+}
+pub(crate) async fn prune_revisions(
+    State(s): State<ApiState>,
+    Json(preview): Json<proxy_application::revision_service::RevisionPrunePreview>,
+) -> ApiResult<Json<Value>> {
+    let deleted_count = s.control.prune_revisions(&preview).await?;
+    Ok(Json(json!({"deleted_count": deleted_count})))
+}
 pub(crate) async fn publish(
     State(s): State<ApiState>,
     Json(input): Json<Publish>,

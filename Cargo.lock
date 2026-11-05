@@ -2547,6 +2547,7 @@ dependencies = [
  "anyhow",
  "chrono",
  "proxy-domain",
+ "serde",
  "serde_json",
  "sha2",
  "sqlx",

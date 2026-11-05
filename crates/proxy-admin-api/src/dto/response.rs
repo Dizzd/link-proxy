@@ -20,3 +20,13 @@ impl Page {
 pub(crate) struct Publish {
     pub(crate) expected_revision: i64,
 }
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct RevisionRetention {
+    #[serde(default = "default_revision_retention")]
+    pub(crate) keep_latest: u32,
+}
+fn default_revision_retention() -> u32 {
+    100
+}

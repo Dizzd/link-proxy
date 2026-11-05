@@ -128,6 +128,68 @@ async fn login_stores_argon2_password_and_session_hash_and_restores_session() {
     assert_eq!(body["user"]["username"], "admin");
     assert!(body.get("password_hash").is_none());
 }
+
+#[tokio::test]
+async fn revision_cleanup_preview_and_commit_require_session_csrf() {
+    let (_, app) = setup().await;
+    let (cookie, csrf) = login(&app, PASSWORD).await;
+    for path in [
+        "/api/v1/config/revisions/prune/preview",
+        "/api/v1/config/revisions/prune",
+    ] {
+        assert_eq!(
+            call(
+                &app,
+                "POST",
+                path,
+                json!({}),
+                Some(&cookie),
+                None,
+                Some("http://localhost")
+            )
+            .await
+            .0,
+            StatusCode::FORBIDDEN
+        );
+        assert_eq!(
+            call(
+                &app,
+                "POST",
+                path,
+                json!({}),
+                Some(&cookie),
+                Some(&csrf),
+                Some("http://other.example")
+            )
+            .await
+            .0,
+            StatusCode::FORBIDDEN
+        );
+    }
+    let (status, preview, _) = call(
+        &app,
+        "POST",
+        "/api/v1/config/revisions/prune/preview",
+        json!({}),
+        Some(&cookie),
+        Some(&csrf),
+        Some("http://localhost"),
+    )
+    .await;
+    assert_eq!(status, StatusCode::OK);
+    let (status, result, _) = call(
+        &app,
+        "POST",
+        "/api/v1/config/revisions/prune",
+        preview,
+        Some(&cookie),
+        Some(&csrf),
+        Some("http://localhost"),
+    )
+    .await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(result["deleted_count"], 0);
+}
 #[tokio::test]
 async fn invalid_credentials_are_generic_and_token_auth_is_disabled_when_unconfigured() {
     let (_, app) = setup().await;
