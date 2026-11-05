@@ -32,3 +32,16 @@ The HTTP and PostgreSQL harnesses explicitly executed their ignored tests. Brows
 ## Publication status
 
 The v1.1.0 tag, GitHub Release, hosted image smoke/publication and downloaded-asset verification are pending at preparation time. No deployment or production benchmark is claimed.
+
+## Publication and actual assets verified
+
+- Stable release, marked Latest: https://github.com/Dizzd/link-proxy/releases/tag/v1.1.0.
+- Immutable tagged source: `739c25c504aa27bb0c2e8753b4753ce55f4fc4b1`.
+- Successful hosted workflow: https://github.com/Dizzd/link-proxy/actions/runs/41981979444.
+- All four jobs passed: Rust, frontend, deployment validation and publication. The publish job built linux/amd64 and ran the real PostgreSQL/proxy/Caddy/Redis smoke test before pushing the image and uploading all eight assets.
+- Image tag: `ghcr.io/dizzd/link-proxy:v1.1.0`.
+- Pinned image: `ghcr.io/dizzd/link-proxy@sha256:9f621e172af91f5fb1e29a0d2ed83aa5328756ebc7e38edb068f168dad4714af`.
+
+Downloaded all eight actual assets through authenticated GitHub access. All seven SHA256SUMS entries matched; all six archive members were regular files with mode 0644 and matched standalone assets byte for byte. GitHub names the standalone environment asset `default.env.example`; the archive retains `.env.example`. `release.json` reports v1.1.0/linux/amd64 and matches the environment's pinned image and hosted publication logs. This supersedes the publication-pending status at preparation time.
+
+Raw hosted logs, workflow/release snapshots and asset validation remain local under `release-v1.1.0-*`; downloads are under ignored `release-assets/v1.1.0`. Subsequent evidence documentation does not move the verified release tag. No production deployment or benchmark was performed.
