@@ -6,6 +6,7 @@ import { mappings } from "../api/mappings";
 import { filterQuery } from "../utils/defaults";
 import { useOperation } from "../hooks/useOperation";
 import { ErrorMessage } from "../components/common/Feedback";
+import { deleteSelected } from "../features/mappings/deleteSelected";
 export default function MappingsPage() {
   const [search, S] = useState(""),
     [domain, D] = useState(""),
@@ -15,6 +16,46 @@ export default function MappingsPage() {
   const query = filterQuery(search, domain, action, enabled, offset);
   const q = useMappings(query);
   const op = useOperation();
+  const [selection, setSelection] = useState<{ query: string; ids: string[] }>({
+    query: "",
+    ids: [],
+  });
+  const [result, setResult] = useState("");
+  const items = q.data?.items || [];
+  const selected =
+    selection.query === query
+      ? selection.ids.filter((id) => items.some((item) => item.id === id))
+      : [];
+  const allSelected = items.length > 0 && selected.length === items.length;
+  const locked = op.busy || q.isFetching;
+  async function removeSelected() {
+    const ids = [...selected];
+    if (
+      !ids.length ||
+      !confirm(
+        `Delete ${ids.length} selected mapping(s) from the draft? Publish is required to update live routing.`,
+      )
+    )
+      return;
+    setResult("");
+    await op.run(async () => {
+      const outcome = await deleteSelected(ids, mappings.remove);
+      setSelection({
+        query,
+        ids: ids.filter((id) => !outcome.deletedIds.includes(id)),
+      });
+      setResult(
+        `${outcome.deletedIds.length} of ${ids.length} mapping(s) deleted from the draft. Publish when ready to update live routing.`,
+      );
+      const refreshed = await q.refetch();
+      if (refreshed.data && offset >= refreshed.data.total)
+        O(Math.max(0, Math.ceil(refreshed.data.total / 25) - 1) * 25);
+      if (outcome.error)
+        throw new Error(
+          `Deletion stopped. Review the remaining selection before retrying: ${outcome.error instanceof Error ? outcome.error.message : String(outcome.error)}`,
+        );
+    });
+  }
   return (
     <>
       <div className="titlebar">
@@ -30,9 +71,11 @@ export default function MappingsPage() {
         <label>
           Search
           <input
+            disabled={op.busy}
             value={search}
             onChange={(e) => {
               S(e.target.value);
+              setSelection({ query, ids: [] });
               O(0);
             }}
           />
@@ -40,9 +83,11 @@ export default function MappingsPage() {
         <label>
           Host
           <input
+            disabled={op.busy}
             value={domain}
             onChange={(e) => {
               D(e.target.value);
+              setSelection({ query, ids: [] });
               O(0);
             }}
           />
@@ -50,9 +95,11 @@ export default function MappingsPage() {
         <label>
           Action
           <select
+            disabled={op.busy}
             value={action}
             onChange={(e) => {
               A(e.target.value);
+              setSelection({ query, ids: [] });
               O(0);
             }}
           >
@@ -64,9 +111,11 @@ export default function MappingsPage() {
         <label>
           Status
           <select
+            disabled={op.busy}
             value={enabled}
             onChange={(e) => {
               E(e.target.value);
+              setSelection({ query, ids: [] });
               O(0);
             }}
           >
@@ -77,10 +126,50 @@ export default function MappingsPage() {
         </label>
       </div>
       <ErrorMessage error={q.error || op.error} />
+      <div className="bulk-actions" aria-label="Mapping selection actions">
+        <span role="status">
+          {selected.length} selected on this page (up to 25)
+        </span>
+        <button
+          disabled={locked || !selected.length}
+          onClick={() => void removeSelected()}
+        >
+          {op.busy ? "Deleting…" : `Delete selected (${selected.length})`}
+        </button>
+        <button
+          className="quiet"
+          disabled={op.busy || !selected.length}
+          onClick={() => setSelection({ query, ids: [] })}
+        >
+          Clear selection
+        </button>
+      </div>
+      {result && <p role="status">{result}</p>}
       <div className="table-scroll">
         <table>
           <thead>
             <tr>
+              <th scope="col">
+                <label className="mapping-select">
+                  <input
+                    type="checkbox"
+                    aria-label="Select all mappings on this page"
+                    checked={allSelected}
+                    disabled={locked || !items.length}
+                    ref={(input) => {
+                      if (input)
+                        input.indeterminate =
+                          selected.length > 0 && !allSelected;
+                    }}
+                    onChange={() =>
+                      setSelection({
+                        query,
+                        ids: allSelected ? [] : items.map((item) => item.id),
+                      })
+                    }
+                  />
+                </label>
+              </th>
               <th>Mapping</th>
               <th>Source</th>
               <th>Action</th>
@@ -92,6 +181,24 @@ export default function MappingsPage() {
           <tbody>
             {q.data?.items.map((m) => (
               <tr key={m.id}>
+                <td>
+                  <label className="mapping-select">
+                    <input
+                      type="checkbox"
+                      aria-label={`Select ${m.mapping_key}`}
+                      checked={selected.includes(m.id)}
+                      disabled={locked}
+                      onChange={(event) =>
+                        setSelection({
+                          query,
+                          ids: event.target.checked
+                            ? [...selected, m.id]
+                            : selected.filter((id) => id !== m.id),
+                        })
+                      }
+                    />
+                  </label>
+                </td>
                 <td>
                   <Link to={`/mappings/${m.id}`}>{m.mapping_key}</Link>
                   <small>{m.name}</small>
@@ -112,7 +219,7 @@ export default function MappingsPage() {
                 </td>
                 <td>
                   <button
-                    disabled={op.busy}
+                    disabled={locked}
                     className="quiet"
                     onClick={() => {
                       if (confirm(`Delete ${m.mapping_key} from the draft?`))
@@ -132,10 +239,16 @@ export default function MappingsPage() {
         <p>No matching mappings. Create one or import a file.</p>
       )}
       <Pagination
+        disabled={op.busy}
         offset={offset}
         total={q.data?.total || 0}
         pageSize={25}
-        onChange={O}
+        onChange={(value) => {
+          if (!op.busy) {
+            setSelection({ query, ids: [] });
+            O(value);
+          }
+        }}
       />
     </>
   );

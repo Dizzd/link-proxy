@@ -3,16 +3,18 @@ export function Pagination({
   total,
   pageSize,
   onChange,
+  disabled = false,
 }: {
   offset: number;
   total: number;
   pageSize: number;
   onChange: (offset: number) => void;
+  disabled?: boolean;
 }) {
   return (
     <div className="pagination">
       <button
-        disabled={!offset}
+        disabled={disabled || !offset}
         onClick={() => onChange(Math.max(0, offset - pageSize))}
       >
         Previous
@@ -21,7 +23,7 @@ export function Pagination({
         {total ? offset + 1 : 0}-{Math.min(offset + pageSize, total)} of {total}
       </span>
       <button
-        disabled={offset + pageSize >= total}
+        disabled={disabled || offset + pageSize >= total}
         onClick={() => onChange(offset + pageSize)}
       >
         Next

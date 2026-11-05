@@ -15,6 +15,7 @@ playwright-report/
 
 # Keep verification summaries; ignore raw evidence and temporary artifacts.
 /docs/verification/**
+/docs/superpowers/**
 !/docs/verification/**/
 !/docs/verification/**/*.md
 /release-assets/

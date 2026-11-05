@@ -210,3 +210,12 @@ Aligned Cargo workspace packages and the private frontend to 1.0.0, regenerated 
 ### v1.0.0 publication verified
 
 Published https://github.com/Dizzd/link-proxy/releases/tag/v1.0.0 as a stable release marked Latest, from commit 20df8f041022a4c2c65f84f9141c344a58c72d91. Workflow https://github.com/Dizzd/link-proxy/actions/runs/41383412049 passed all four jobs, including actual image build, PostgreSQL/proxy/Caddy/Redis smoke, GHCR push and upload of all eight assets. Download verification passed all seven checksums and six archive-member comparisons. The pinned linux/amd64 image digest is sha256:60e6bbefabab2172cd876e42d6f94f66ae274ea94fa70d621f6cac666526166a, matching metadata, environment and hosted push logs. Evidence: [release-v1.0.0.md](verification/release-v1.0.0.md). No production deployment or production benchmark is claimed.
+
+## Mapping bulk deletion
+
+- [x] Add page-scoped mapping selection (up to 25 rows), mixed-state select-all, clear selection and confirmed draft deletion. Clear selection on filter/page changes and disable controls during deletion.
+- [x] Reuse authenticated DELETE requests sequentially, stop on failure, report partial completion, refresh and retain remaining visible selections. Recover valid pagination after deleting the last page; publishing remains explicit.
+- [x] Frontend build and 26 unit tests passed. One Playwright scenario passed with mocked API responses, covering cancellation, selection reset, CSRF propagation, busy controls, partial failure/retry and last-page recovery; desktop/mobile/landscape layout checks passed.
+- [x] Linux/WSL fmt, workspace check, all-feature tests (62 passed, 10 ignored), Clippy, proxy-server build and real HTTP/recovery/password-reset/graceful-shutdown harness passed. The harness explicitly executed five ignored HTTP tests.
+
+Evidence and limits: [mapping-bulk-delete.md](verification/mapping-bulk-delete.md). Browser bulk deletion was tested against mocked API responses; no live-backend browser bulk-delete test, deployment, Docker run or production benchmark is claimed. Separate PostgreSQL, Redis and scale tests were not rerun.

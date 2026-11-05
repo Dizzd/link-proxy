@@ -278,6 +278,25 @@ h3 {
   border: 1px solid var(--border);
   border-radius: 8px;
 }
+.bulk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+}
+.mapping-select {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  margin: 0;
+  cursor: pointer;
+}
+.mapping-select input {
+  margin: 0;
+}
 table {
   width: 100%;
   border-collapse: collapse;
